@@ -7,33 +7,39 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const PORT = 5000;
+
+// Test route
+app.get("/", (req, res) => {
+  res.send("SignBridge backend working 🚀");
+});
+
+// Translation route
 app.post("/translate", async (req, res) => {
-  const { text, target } = req.body;
-
-  console.log("Incoming request:", text, target);
-
   try {
-    // ✅ Try MyMemory API (more reliable)
-    const response = await axios.get(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${target}`
+    const { text, targetLang } = req.body;
+
+    const response = await axios.post(
+      "https://libretranslate.de/translate",
+      {
+        q: text,
+        source: "auto",
+        target: targetLang,
+        format: "text"
+      },
+      {
+        headers: { "Content-Type": "application/json" }
+      }
     );
 
-    console.log("API Response:", response.data);
-
-    const translated = response.data?.responseData?.translatedText;
-
-    if (translated) {
-      return res.json({ translatedText: translated });
-    } else {
-      return res.json({ translatedText: "No translation found" });
-    }
+    res.json({ translatedText: response.data.translatedText });
 
   } catch (error) {
-    console.error("ERROR:", error.message);
-    return res.json({ translatedText: "Translation failed" });
+    console.error(error.message);
+    res.status(500).json({ error: "Translation failed" });
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

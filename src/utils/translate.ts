@@ -6,10 +6,7 @@ export async function translateText(text: string, target: string) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ 
-      text, 
-      targetLang: target   
-    }),
+    body: JSON.stringify({ text, targetLang: target }), // ⭐ FIXED
   });
 
   const data = await res.json();

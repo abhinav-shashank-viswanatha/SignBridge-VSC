@@ -20,7 +20,7 @@ app.post("/translate", async (req, res) => {
     const { text, targetLang } = req.body;
 
     const response = await axios.post(
-      "https://libretranslate.de/translate",
+      "https://translate.argosopentech.com/translate",
       {
         q: text,
         source: "auto",

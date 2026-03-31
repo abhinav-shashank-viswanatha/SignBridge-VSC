@@ -1,3 +1,4 @@
+//Features
 import { motion } from "framer-motion";
 import { Mic, Camera, Type, Volume2, Globe, Brain, ArrowLeftRight, Accessibility, Shield, Zap } from "lucide-react";
 

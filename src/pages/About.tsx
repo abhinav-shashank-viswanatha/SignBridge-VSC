@@ -1,3 +1,4 @@
+//About
 import { motion } from "framer-motion";
 import { Heart, Target, Users, Building2 } from "lucide-react";
 

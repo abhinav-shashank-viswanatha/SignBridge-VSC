@@ -1,3 +1,4 @@
+//Home
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Mic, Type, Hand, Globe, Zap, Shield } from "lucide-react";

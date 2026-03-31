@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/signbridge/Layout";
+import Home from "@/pages/Home";
 import Features from "@/pages/Features";
 import Demo from "@/pages/Demo";
 import Technology from "@/pages/Technology";
@@ -20,7 +21,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Features />} />
+            <Route path="/" element={<Home />} /> 
             <Route path="/features" element={<Features />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/technology" element={<Technology />} />

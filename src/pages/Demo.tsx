@@ -1,4 +1,3 @@
-//Demo (The Translation page)
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff, Camera, Type, Volume2, Hand, ChevronDown, ArrowLeftRight, Loader2, Square, Play, Pause, RotateCcw } from "lucide-react";
@@ -39,7 +38,6 @@ const demoTranslations: Record<string, Record<string, string>> = {
     "i love you": "te quiero", "friend": "amigo", "water": "agua", "food": "comida",
     "my name is": "mi nombre es", "nice to meet you": "encantado de conocerte", "see you later": "hasta luego",
     "i dont understand": "no entiendo", "can you help me": "¿puedes ayudarme?", "where is": "¿dónde está?",
-    "hello how are you": "hola, ¿cómo estás?"
   },
   French: {
     "hello": "bonjour", "hi": "salut", "thank you": "merci", "thanks": "merci", "bye": "au revoir", "goodbye": "au revoir",
@@ -133,14 +131,45 @@ function detectGesture(landmarks: any[]): string {
 
   const thumbIndexDist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
 
-  if (thumbTip.y < wrist.y && !indexUp && !middleUp && !ringUp && !pinkyUp) return "Yes";
-  if (indexUp && middleUp && ringUp && pinkyUp) return "Hello";
-  if (indexUp && middleUp && !ringUp && !pinkyUp) return "Peace";
-  if (!indexUp && !middleUp && !ringUp && !pinkyUp) return "Stop";
-  if (indexUp && !middleUp && !ringUp && !pinkyUp) return "One";
-  if (thumbIndexDist < 0.05) return "OK";
-  if (indexUp && !middleUp && !ringUp && pinkyUp) return "Love";
-  if (indexUp && middleUp && ringUp && !pinkyUp) return "Hi";
+  // 👍 YES — thumb up, all fingers curled
+  if (thumbTip.y < wrist.y && !indexUp && !middleUp && !ringUp && !pinkyUp) {
+    return "Yes";
+  }
+
+  // ✋ HELLO — open palm, all fingers up
+  if (indexUp && middleUp && ringUp && pinkyUp) {
+    return "Hello";
+  }
+
+  // ✌️ PEACE — index + middle up only
+  if (indexUp && middleUp && !ringUp && !pinkyUp) {
+    return "Peace";
+  }
+
+  // ✊ STOP — fist, no fingers up
+  if (!indexUp && !middleUp && !ringUp && !pinkyUp) {
+    return "Stop";
+  }
+
+  // ☝️ ONE — index finger only
+  if (indexUp && !middleUp && !ringUp && !pinkyUp) {
+    return "One";
+  }
+
+  // 👌 OK — thumb + index close together
+  if (thumbIndexDist < 0.05) {
+    return "OK";
+  }
+
+  // 🤟 LOVE — index + pinky up, middle + ring down
+  if (indexUp && !middleUp && !ringUp && pinkyUp) {
+    return "Love";
+  }
+
+  // 🤚 HI — index + middle + ring up, pinky down
+  if (indexUp && middleUp && ringUp && !pinkyUp) {
+    return "Hi";
+  }
 
   return "";
 }
@@ -172,18 +201,16 @@ const Demo = () => {
   const isTranslatingRef = useRef(false);
   const gestureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Translation API via backend
   const apiTranslate = async (text: string, targetLangLabel: string): Promise<string> => {
     const targetCode = langCodeMap[targetLangLabel] || "es";
     const result = await translateText(text, targetCode);
     console.log("Translation API response:", result);
-
-    if (!result || typeof result !== "string") {
-      throw new Error("No translated text returned");
-    }
-
+    if (result === "Translation failed") throw new Error(result);
     return result;
   };
 
+  // Speech recognition
   const startListening = useCallback(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -224,8 +251,10 @@ const Demo = () => {
     setStatus("ready");
   }, []);
 
+  // Camera with MediaPipe Hands
   const startCamera = useCallback(async () => {
     try {
+      // Load MediaPipe if not already loaded
       if (!mediaPipeLoaded) {
         setStatus("processing");
         try {
@@ -243,6 +272,7 @@ const Demo = () => {
       }
       setStatus("detecting");
 
+      // Try to initialize MediaPipe Hands
       const mpHands = (window as any).Hands;
       const mpCamera = (window as any).Camera;
 
@@ -259,6 +289,7 @@ const Demo = () => {
         });
 
         hands.onResults((results: any) => {
+          // Draw hand landmarks on canvas
           if (canvasRef.current && videoRef.current) {
             const ctx = canvasRef.current.getContext("2d");
             if (ctx) {
@@ -269,6 +300,7 @@ const Demo = () => {
               if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
                 const landmarks = results.multiHandLandmarks[0];
 
+                // Draw connections
                 ctx.strokeStyle = "hsl(var(--primary))";
                 ctx.lineWidth = 2;
                 const connections = [
@@ -286,6 +318,7 @@ const Demo = () => {
                   ctx.stroke();
                 });
 
+                // Draw points
                 landmarks.forEach((lm: any) => {
                   ctx.beginPath();
                   ctx.arc(lm.x * canvasRef.current!.width, lm.y * canvasRef.current!.height, 4, 0, 2 * Math.PI);
@@ -293,10 +326,12 @@ const Demo = () => {
                   ctx.fill();
                 });
 
+                // Detect gesture
                 const gesture = detectGesture(landmarks);
                 setDetectedGesture(gesture);
                 setTranscript(gesture);
 
+                // Auto-translate after gesture is stable for 2 seconds
                 if (gestureTimeoutRef.current) clearTimeout(gestureTimeoutRef.current);
                 gestureTimeoutRef.current = setTimeout(() => {
                   setInputText(gesture);
@@ -321,6 +356,7 @@ const Demo = () => {
         mpCameraRef.current = camera;
         camera.start();
       } else {
+        // Fallback: simulated gesture detection if MediaPipe fails to load
         console.log("Using simulated sign detection (MediaPipe not available)");
         const gestures = ["Hello", "Thank you", "Yes", "No", "Please", "Help"];
         let idx = 0;
@@ -330,6 +366,7 @@ const Demo = () => {
           setTranscript(gesture);
           idx++;
         }, 3000);
+        // Store interval for cleanup
         (streamRef.current as any).__fallbackInterval = interval;
       }
     } catch {
@@ -373,6 +410,7 @@ const Demo = () => {
     };
   }, []);
 
+  // Sign animation cycling
   useEffect(() => {
     if (outputMode === "sign" && translatedText) {
       const interval = setInterval(() => {
@@ -382,17 +420,16 @@ const Demo = () => {
     }
   }, [outputMode, translatedText]);
 
+  // Translation pipeline
   const handleTranslate = useCallback(async () => {
     if (isTranslatingRef.current) return;
     const textToTranslate = inputMode === "text" ? inputText : transcript;
-
     if (!textToTranslate.trim()) {
       setErrorMsg("Enter text first");
       setStatus("error");
       setTimeout(() => setStatus("ready"), 2000);
       return;
     }
-
     if (!navigator.onLine) {
       setErrorMsg("No internet connection");
       setStatus("error");
@@ -404,24 +441,14 @@ const Demo = () => {
     setStatus("translating");
     setErrorMsg("");
     setTranslatedText("");
-    setTranslationSource("");
 
     try {
-      console.log("Translating text:", textToTranslate, "to", targetLang);
       const result = await apiTranslate(textToTranslate, targetLang);
-
-      if (!result || !result.trim()) {
-        throw new Error("No translated text returned");
-      }
-
       setTranslatedText(result);
       setTranslationSource("api");
       setStatus("ready");
-
       if (outputMode === "speech") speakText(result);
-    } catch (err) {
-      console.error("Translate error:", err);
-
+    } catch {
       const localResult = localTranslate(textToTranslate, targetLang);
       if (localResult) {
         setTranslatedText(localResult);
@@ -429,14 +456,14 @@ const Demo = () => {
         setStatus("ready");
         if (outputMode === "speech") speakText(localResult);
       } else {
-        setErrorMsg(err instanceof Error ? err.message : "Translation failed. Try again.");
+        setErrorMsg("Translation failed. Try again.");
         setStatus("error");
-        setTimeout(() => setStatus("ready"), 3000);
+        setTimeout(() => setStatus("ready"), 2000);
       }
     } finally {
       isTranslatingRef.current = false;
     }
-  }, [inputMode, inputText, transcript, targetLang, outputMode]);
+  }, [inputMode, inputText, transcript, sourceLang, targetLang, outputMode]);
 
   const speakText = (text: string) => {
     speechSynthesis.cancel();
@@ -491,6 +518,7 @@ const Demo = () => {
   return (
     <div className="py-12 px-6 min-h-[calc(100svh-4rem)]">
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -504,12 +532,14 @@ const Demo = () => {
           </p>
         </motion.div>
 
+        {/* Status + Language bar */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="flex flex-wrap items-center justify-center gap-4 mb-8"
         >
+          {/* Status */}
           <div className="flex items-center gap-2 px-4 py-2 rounded-full glass font-mono text-xs">
             <span className="relative flex h-2 w-2">
               {status !== "ready" && <span className={`absolute inset-0 rounded-full ${currentStatus.color} animate-pulse-ring`} />}
@@ -518,6 +548,7 @@ const Demo = () => {
             <span className="text-muted-foreground">{currentStatus.label}</span>
           </div>
 
+          {/* Language selector */}
           <div className="flex items-center gap-1">
             <div className="relative">
               <button
@@ -564,6 +595,7 @@ const Demo = () => {
             </div>
           </div>
 
+          {/* Reset button */}
           <button
             onClick={handleReset}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg glass text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -572,6 +604,7 @@ const Demo = () => {
           </button>
         </motion.div>
 
+        {/* Error message */}
         <AnimatePresence>
           {errorMsg && (
             <motion.div
@@ -587,13 +620,16 @@ const Demo = () => {
           )}
         </AnimatePresence>
 
+        {/* Main panels */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* INPUT PANEL */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
             className="glass rounded-2xl overflow-hidden"
           >
+            {/* Input mode tabs */}
             <div className="flex border-b border-border">
               {([
                 { mode: "text" as InputMode, icon: Type, label: "Text" },
@@ -623,6 +659,7 @@ const Demo = () => {
               ))}
             </div>
 
+            {/* Input content */}
             <div className="p-6 min-h-[300px] flex flex-col">
               <AnimatePresence mode="wait">
                 {inputMode === "text" && (
@@ -757,12 +794,14 @@ const Demo = () => {
             </div>
           </motion.div>
 
+          {/* OUTPUT PANEL */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             className="glass rounded-2xl overflow-hidden"
           >
+            {/* Output mode tabs */}
             <div className="flex border-b border-border">
               {([
                 { mode: "text" as OutputMode, icon: Type, label: "Text" },
@@ -793,6 +832,7 @@ const Demo = () => {
               ))}
             </div>
 
+            {/* Output content */}
             <div className="p-6 min-h-[300px] flex flex-col">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
@@ -906,6 +946,7 @@ const Demo = () => {
           </motion.div>
         </div>
 
+        {/* Translate button */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

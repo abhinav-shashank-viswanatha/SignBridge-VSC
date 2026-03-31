@@ -1,38 +1,25 @@
-app.post("/translate", async (req, res) => {
-  try {
-    const { text, target } = req.body;
+export async function translateText(text: string, target: string) {
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-    if (!text || !target) {
-      return res.status(400).json({ error: "Missing text or target" });
-    }
+  console.log("BACKEND_URL:", BACKEND_URL);
+  console.log("Sending request:", { text, target });
 
-    console.log("Incoming:", text, target);
+  const res = await fetch(`${BACKEND_URL}/translate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ text, target }),
+  });
 
-    const response = await axios.post(
-      "https://libretranslate.de/translate",
-      {
-        q: text,
-        source: "auto",
-        target: target,
-        format: "text"
-      },
-      {
-        headers: { "Content-Type": "application/json" }
-      }
-    );
+  const data = await res.json();
 
-    console.log("API RESPONSE:", response.data);
+  console.log("Response status:", res.status);
+  console.log("Response data:", data);
 
-    res.json({
-      translatedText: response.data.translatedText
-    });
-
-  } catch (error) {
-    console.error("FULL ERROR:", error.response?.data || error.message);
-
-    res.status(500).json({
-      error: "Translation failed",
-      details: error.response?.data || error.message
-    });
+  if (!res.ok) {
+    throw new Error("Translation failed");
   }
-});
+
+  return data.translatedText;
+}

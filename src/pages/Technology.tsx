@@ -1,4 +1,4 @@
-//Technology
+
 import { motion } from "framer-motion";
 import { Brain, Eye, Mic, Globe, Cpu, Layers } from "lucide-react";
 

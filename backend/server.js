@@ -18,53 +18,87 @@ app.get("/health", (req, res) => {
 });
 
 app.post("/translate", async (req, res) => {
+  const { text, target } = req.body;
+
+  if (!text || !target) {
+    return res.status(400).json({
+      error: "Missing text or target",
+    });
+  }
+
+  console.log("Incoming request:", { text, target });
+
   try {
-    const { text, target } = req.body;
-
-    if (!text || !target) {
-      return res.status(400).json({
-        error: "Missing text or target"
-      });
-    }
-
-    console.log("Incoming request:", { text, target });
-
-    const response = await axios.post(
+    // Provider 1: Argos OpenTech
+    const argosResponse = await axios.post(
       "https://translate.argosopentech.com/translate",
       {
         q: text,
-        source: "auto",
+        source: "en",
         target,
-        format: "text"
+        format: "text",
       },
       {
         headers: { "Content-Type": "application/json" },
-        timeout: 15000
+        timeout: 15000,
       }
     );
 
-    console.log("Provider response:", response.data);
-
-    if (!response.data || !response.data.translatedText) {
-      return res.status(502).json({
-        error: "No translatedText returned from provider",
-        providerResponse: response.data
+    if (argosResponse.data?.translatedText) {
+      console.log("Argos success:", argosResponse.data.translatedText);
+      return res.json({
+        translatedText: argosResponse.data.translatedText,
       });
     }
 
-    res.json({
-      translatedText: response.data.translatedText
-    });
-  } catch (error) {
-    console.error("FULL TRANSLATION ERROR:");
-    console.error("message:", error.message);
-    console.error("provider data:", error.response?.data);
-    console.error("provider status:", error.response?.status);
+    throw new Error("Argos returned no translatedText");
+  } catch (argosError) {
+    console.error(
+      "Argos failed:",
+      argosError.response?.data || argosError.message
+    );
 
-    res.status(500).json({
-      error: "Translation failed",
-      details: error.response?.data || error.message
-    });
+    try {
+      // Provider 2: MyMemory fallback
+      const mmResponse = await axios.get(
+        "https://api.mymemory.translated.net/get",
+        {
+          params: {
+            q: text,
+            langpair: `en|${target}`,
+          },
+          timeout: 15000,
+        }
+      );
+
+      const translated =
+        mmResponse.data?.responseData?.translatedText || "";
+
+      if (translated) {
+        console.log("MyMemory success:", translated);
+        return res.json({
+          translatedText: translated,
+        });
+      }
+
+      return res.status(502).json({
+        error: "Both translation providers failed",
+        details: mmResponse.data || "No translated text returned",
+      });
+    } catch (mmError) {
+      console.error(
+        "MyMemory failed:",
+        mmError.response?.data || mmError.message
+      );
+
+      return res.status(500).json({
+        error: "Translation failed",
+        details: {
+          argos: argosError.response?.data || argosError.message,
+          mymemory: mmError.response?.data || mmError.message,
+        },
+      });
+    }
   }
 });
 

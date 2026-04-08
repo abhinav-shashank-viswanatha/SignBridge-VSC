@@ -212,39 +212,70 @@ const Demo = () => {
 
   // Speech recognition
   const startListening = useCallback(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      setTranscript("Speech recognition not supported in this browser.");
-      return;
+  const SpeechRecognition =
+    (window as any).SpeechRecognition ||
+    (window as any).webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    setTranscript("Speech recognition not supported in this browser.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.continuous = true;
+  recognition.interimResults = false;
+
+  const speechLangMap: Record<string, string> = {
+    English: "en-US",
+    Hindi: "hi-IN",
+    Spanish: "es-ES",
+    French: "fr-FR",
+    German: "de-DE",
+    Chinese: "zh-CN",
+    Japanese: "ja-JP",
+    Korean: "ko-KR",
+    Arabic: "ar-SA",
+    Portuguese: "pt-PT",
+    Russian: "ru-RU",
+    Italian: "it-IT",
+    Dutch: "nl-NL",
+    Turkish: "tr-TR",
+    Indonesian: "id-ID",
+  };
+
+  recognition.lang = speechLangMap[sourceLang] || "en-US";
+
+  recognition.onresult = (event: any) => {
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const transcript = event.results[i][0].transcript;
+
+    // Only update transcript when speech is final
+    if (event.results[i].isFinal) {
+      setTranscript((prev) => prev + " " + transcript);
     }
-    const recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = langCodeMap[sourceLang] || "en-US";
+  }
+};
 
-    recognition.onresult = (event: any) => {
-      let finalTranscript = "";
-      let interimTranscript = "";
-      for (let i = 0; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
-        } else {
-          interimTranscript += event.results[i][0].transcript;
-        }
-      }
-      setTranscript(finalTranscript || interimTranscript);
-    };
+  recognition.onerror = (event: any) => {
+    console.error("Speech error:", event.error);
+    setStatus("ready");
+  };
 
-    recognition.onerror = () => setStatus("ready");
-    recognition.onend = () => setStatus("ready");
+  recognition.onend = () => {
+    setStatus("ready");
+  };
 
-    recognitionRef.current = recognition;
-    recognition.start();
-    setStatus("listening");
-    setTranscript("");
-    setTranslatedText("");
-    setErrorMsg("");
-  }, [sourceLang]);
+  recognitionRef.current = recognition;
+
+  recognition.start();
+
+  setStatus("listening");
+  setTranscript("");
+  setTranslatedText("");
+  setErrorMsg("");
+
+}, [sourceLang]);
 
   const stopListening = useCallback(() => {
     recognitionRef.current?.stop();

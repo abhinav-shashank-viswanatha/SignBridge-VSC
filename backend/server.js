@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
-    libretranslateConfigured: true,
+    libretranslateConfigured: false,
     myMemoryEmailConfigured: false,
   });
 });
@@ -39,74 +39,41 @@ app.post("/translate", async (req, res) => {
   console.log("Incoming request:", { text, source, target });
 
   try {
-    const argosResponse = await axios.post(
-      "https://translate.argosopentech.com/translate",
+    const mmResponse = await axios.get(
+      "https://api.mymemory.translated.net/get",
       {
-        q: text,
-        source,
-        target,
-        format: "text",
-      },
-      {
-        headers: { "Content-Type": "application/json" },
+        params: {
+          q: text,
+          langpair: `${source}|${target}`,
+        },
         timeout: 15000,
       }
     );
 
-    if (argosResponse.data?.translatedText) {
-      console.log("Argos success:", argosResponse.data.translatedText);
-      return res.json({
-        translatedText: argosResponse.data.translatedText,
+    console.log("MyMemory raw response:", mmResponse.data);
+
+    const translated = mmResponse.data?.responseData?.translatedText || "";
+
+    if (!translated) {
+      return res.status(502).json({
+        error: "Translation provider returned no translated text",
+        details: mmResponse.data,
       });
     }
 
-    throw new Error("Argos returned no translatedText");
-  } catch (argosError) {
+    return res.json({
+      translatedText: translated,
+    });
+  } catch (error) {
     console.error(
-      "Argos failed:",
-      argosError.response?.data || argosError.message
+      "MyMemory failed:",
+      error.response?.data || error.message
     );
 
-    try {
-      const mmResponse = await axios.get(
-        "https://api.mymemory.translated.net/get",
-        {
-          params: {
-            q: text,
-            langpair: `${source}|${target}`,
-          },
-          timeout: 15000,
-        }
-      );
-
-      const translated =
-        mmResponse.data?.responseData?.translatedText || "";
-
-      if (translated) {
-        console.log("MyMemory success:", translated);
-        return res.json({
-          translatedText: translated,
-        });
-      }
-
-      return res.status(502).json({
-        error: "Both translation providers failed",
-        details: mmResponse.data || "No translated text returned",
-      });
-    } catch (mmError) {
-      console.error(
-        "MyMemory failed:",
-        mmError.response?.data || mmError.message
-      );
-
-      return res.status(500).json({
-        error: "Translation failed",
-        details: {
-          argos: argosError.response?.data || argosError.message,
-          mymemory: mmError.response?.data || mmError.message,
-        },
-      });
-    }
+    return res.status(500).json({
+      error: "Translation failed",
+      details: error.response?.data || error.message,
+    });
   }
 });
 

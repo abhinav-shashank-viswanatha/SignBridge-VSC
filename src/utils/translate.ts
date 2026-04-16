@@ -25,15 +25,11 @@ export async function translateText(text: string, source: string, target: string
     headers: {
       "Content-Type": "application/json",
     },
-<<<<<<< HEAD
     body: JSON.stringify({
       text,
       source,
       target,
     }),
-=======
-    body: JSON.stringify({ text, source, target }),
->>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   });
 
   let data: any = null;
@@ -45,13 +41,6 @@ export async function translateText(text: string, source: string, target: string
   }
 
   if (!res.ok) {
-<<<<<<< HEAD
-    throw new Error(data?.error || "Translation failed");
-  }
-
-  if (!data?.translatedText) {
-    throw new Error("No translated text returned from API");
-=======
     const details =
       data?.details
         ? ` | details: ${JSON.stringify(data.details)}`
@@ -62,7 +51,6 @@ export async function translateText(text: string, source: string, target: string
 
   if (!data?.translatedText || typeof data.translatedText !== "string") {
     throw new Error("No translated text returned");
->>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   }
 
   return data.translatedText;

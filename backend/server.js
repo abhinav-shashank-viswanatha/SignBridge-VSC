@@ -29,21 +29,6 @@ app.get("/health", (req, res) => {
 app.post("/translate", async (req, res) => {
   const { text, source, target } = req.body;
 
-<<<<<<< HEAD
-  if (!text || !source || !target) {
-    return res.status(400).json({
-      error: "Missing text, source, or target",
-    });
-  }
-
-  if (source === target) {
-    return res.status(400).json({
-      error: "Please select two different languages",
-    });
-  }
-
-  console.log("Incoming request:", { text, source, target });
-=======
   if (
     !text ||
     typeof text !== "string" ||
@@ -60,7 +45,6 @@ app.post("/translate", async (req, res) => {
   const normalizedText = text.trim();
   const normalizedSource = source.trim().toLowerCase();
   const normalizedTarget = target.trim().toLowerCase();
->>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
 
   if (!normalizedText) {
     return res.status(400).json({
@@ -85,17 +69,6 @@ app.post("/translate", async (req, res) => {
 
   // Provider 1: LibreTranslate
   try {
-<<<<<<< HEAD
-    // Provider 1: Argos OpenTech
-    const argosResponse = await axios.post(
-      "https://translate.argosopentech.com/translate",
-      {
-        q: text,
-        source,
-        target,
-        format: "text",
-      },
-=======
     const payload = {
       q: normalizedText,
       source: normalizedSource,
@@ -110,7 +83,6 @@ app.post("/translate", async (req, res) => {
     const libreResponse = await axios.post(
       `${LIBRETRANSLATE_URL.replace(/\/$/, "")}/translate`,
       payload,
->>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
       {
         headers: { "Content-Type": "application/json" },
         timeout: 20000,
@@ -164,24 +136,9 @@ app.post("/translate", async (req, res) => {
       }
     );
 
-<<<<<<< HEAD
-    try {
-      // Provider 2: MyMemory fallback
-      const mmResponse = await axios.get(
-        "https://api.mymemory.translated.net/get",
-        {
-          params: {
-            q: text,
-            langpair: `${source}|${target}`,
-          },
-          timeout: 15000,
-        }
-      );
-=======
     const translated = mmResponse.data?.responseData?.translatedText;
     const responseStatus = mmResponse.data?.responseStatus;
     const responseDetails = mmResponse.data?.responseDetails || "";
->>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
 
     if (
       mmResponse.status === 200 &&

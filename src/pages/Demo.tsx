@@ -253,34 +253,66 @@ function detectGesture(landmarks: any[]): string {
     thumbTip.y - indexTip.y
   );
 
+<<<<<<< HEAD
+=======
+  // 👍 Yes
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (thumbTip.y < wrist.y && !indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "Yes";
   }
 
+<<<<<<< HEAD
+=======
+  // 👋 Hello (open palm)
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (indexUp && middleUp && ringUp && pinkyUp) {
     return "Hello";
   }
 
+<<<<<<< HEAD
+=======
+  // ✌️ Peace
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (indexUp && middleUp && !ringUp && !pinkyUp) {
     return "Peace";
   }
 
+<<<<<<< HEAD
+=======
+  // ✊ Stop
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (!indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "Stop";
   }
 
+<<<<<<< HEAD
+=======
+  // ☝️ One
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "One";
   }
 
+<<<<<<< HEAD
+=======
+  // 👌 OK
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (thumbIndexDist < 0.05) {
     return "OK";
   }
 
+<<<<<<< HEAD
+=======
+  // ❤️ Love / ILY style
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (indexUp && !middleUp && !ringUp && pinkyUp) {
     return "Love";
   }
 
+<<<<<<< HEAD
+=======
+  // 🤚 Hi
+>>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   if (indexUp && middleUp && ringUp && !pinkyUp) {
     return "Hi";
   }

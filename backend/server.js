@@ -9,12 +9,21 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
+const LIBRETRANSLATE_URL =
+  process.env.LIBRETRANSLATE_URL || "https://libretranslate.com";
+const LIBRETRANSLATE_API_KEY = process.env.LIBRETRANSLATE_API_KEY || "";
+const MYMEMORY_EMAIL = process.env.MYMEMORY_EMAIL || "";
+
 app.get("/", (req, res) => {
   res.send("SignBridge backend working 🚀");
 });
 
 app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
+  res.json({
+    status: "ok",
+    libretranslateConfigured: Boolean(LIBRETRANSLATE_URL),
+    myMemoryEmailConfigured: Boolean(MYMEMORY_EMAIL),
+  });
 });
 
 app.post("/translate", async (req, res) => {
@@ -55,67 +64,89 @@ app.post("/translate", async (req, res) => {
     target: normalizedTarget,
   });
 
-  let argosFailure = null;
+  let libreFailure = null;
   let myMemoryFailure = null;
 
+  // Provider 1: LibreTranslate
   try {
-    const argosResponse = await axios.post(
-      "https://translate.argosopentech.com/translate",
-      {
-        q: normalizedText,
-        source: normalizedSource,
-        target: normalizedTarget,
-        format: "text",
-      },
+    const payload = {
+      q: normalizedText,
+      source: normalizedSource,
+      target: normalizedTarget,
+      format: "text",
+    };
+
+    if (LIBRETRANSLATE_API_KEY) {
+      payload.api_key = LIBRETRANSLATE_API_KEY;
+    }
+
+    const libreResponse = await axios.post(
+      `${LIBRETRANSLATE_URL.replace(/\/$/, "")}/translate`,
+      payload,
       {
         headers: { "Content-Type": "application/json" },
-        timeout: 15000,
+        timeout: 20000,
       }
     );
 
     if (
-      argosResponse.data &&
-      typeof argosResponse.data.translatedText === "string" &&
-      argosResponse.data.translatedText.trim()
+      libreResponse.data &&
+      typeof libreResponse.data.translatedText === "string" &&
+      libreResponse.data.translatedText.trim()
     ) {
-      console.log("Argos success:", argosResponse.data.translatedText);
+      console.log("LibreTranslate success:", libreResponse.data.translatedText);
       return res.json({
-        translatedText: argosResponse.data.translatedText,
-        provider: "argos",
+        translatedText: libreResponse.data.translatedText,
+        provider: "libretranslate",
       });
     }
 
-    argosFailure = {
-      provider: "argos",
-      message: "Argos returned no translatedText",
-      data: argosResponse.data,
+    libreFailure = {
+      provider: "libretranslate",
+      message: "LibreTranslate returned no translatedText",
+      data: libreResponse.data || null,
     };
   } catch (error) {
-    argosFailure = {
-      provider: "argos",
+    libreFailure = {
+      provider: "libretranslate",
       message: error.message,
       status: error.response?.status || null,
       data: error.response?.data || null,
     };
   }
 
-  console.error("Argos failed:", argosFailure);
+  console.error("LibreTranslate failed:", libreFailure);
 
+  // Provider 2: MyMemory
   try {
+    const params = {
+      q: normalizedText,
+      langpair: `${normalizedSource}|${normalizedTarget}`,
+    };
+
+    if (MYMEMORY_EMAIL) {
+      params.de = MYMEMORY_EMAIL;
+    }
+
     const mmResponse = await axios.get(
       "https://api.mymemory.translated.net/get",
       {
-        params: {
-          q: normalizedText,
-          langpair: `${normalizedSource}|${normalizedTarget}`,
-        },
-        timeout: 15000,
+        params,
+        timeout: 20000,
       }
     );
 
     const translated = mmResponse.data?.responseData?.translatedText;
+    const responseStatus = mmResponse.data?.responseStatus;
+    const responseDetails = mmResponse.data?.responseDetails || "";
 
-    if (typeof translated === "string" && translated.trim()) {
+    if (
+      mmResponse.status === 200 &&
+      typeof translated === "string" &&
+      translated.trim() &&
+      responseStatus !== 429 &&
+      !translated.startsWith("MYMEMORY WARNING:")
+    ) {
       console.log("MyMemory success:", translated);
       return res.json({
         translatedText: translated,
@@ -125,8 +156,10 @@ app.post("/translate", async (req, res) => {
 
     myMemoryFailure = {
       provider: "mymemory",
-      message: "MyMemory returned no translatedText",
-      data: mmResponse.data,
+      message: "MyMemory returned no usable translated text",
+      status: mmResponse.status || null,
+      data: mmResponse.data || null,
+      responseDetails,
     };
   } catch (error) {
     myMemoryFailure = {
@@ -142,7 +175,7 @@ app.post("/translate", async (req, res) => {
   return res.status(500).json({
     error: "Translation failed",
     details: {
-      argos: argosFailure,
+      libretranslate: libreFailure,
       mymemory: myMemoryFailure,
     },
   });

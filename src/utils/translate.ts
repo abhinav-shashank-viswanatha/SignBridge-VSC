@@ -1,6 +1,10 @@
 export async function translateText(text: string, source: string, target: string) {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+  if (!BACKEND_URL) {
+    throw new Error("VITE_BACKEND_URL is not configured");
+  }
+
   const res = await fetch(`${BACKEND_URL}/translate`, {
     method: "POST",
     headers: {
@@ -9,10 +13,21 @@ export async function translateText(text: string, source: string, target: string
     body: JSON.stringify({ text, source, target }),
   });
 
-  const data = await res.json();
+  let data: any = null;
+
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`Backend returned non-JSON response (${res.status})`);
+  }
 
   if (!res.ok) {
-    throw new Error(data?.error || "Translation failed");
+    const details =
+      data?.details
+        ? ` | details: ${JSON.stringify(data.details)}`
+        : "";
+
+    throw new Error((data?.error || `Translation failed (${res.status})`) + details);
   }
 
   if (!data?.translatedText || typeof data.translatedText !== "string") {

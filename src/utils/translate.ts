@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 export async function translateText(
   text: string,
   source: string,
@@ -7,17 +6,10 @@ export async function translateText(
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   console.log("BACKEND_URL:", BACKEND_URL);
-  console.log("Sending:", { text, source, target });
+  console.log("Sending request:", { text, source, target });
 
   if (!BACKEND_URL) {
     throw new Error("Backend URL not configured");
-=======
-export async function translateText(text: string, source: string, target: string) {
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-  if (!BACKEND_URL) {
-    throw new Error("VITE_BACKEND_URL is not configured");
->>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
   }
 
   const res = await fetch(`${BACKEND_URL}/translate`, {
@@ -25,28 +17,16 @@ export async function translateText(text: string, source: string, target: string
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      text,
-      source,
-      target,
-    }),
+    body: JSON.stringify({ text, source, target }),
   });
 
-  let data: any = null;
+  const data = await res.json();
 
-  try {
-    data = await res.json();
-  } catch {
-    throw new Error(`Backend returned non-JSON response (${res.status})`);
-  }
+  console.log("Response status:", res.status);
+  console.log("Response data:", data);
 
   if (!res.ok) {
-    const details =
-      data?.details
-        ? ` | details: ${JSON.stringify(data.details)}`
-        : "";
-
-    throw new Error((data?.error || `Translation failed (${res.status})`) + details);
+    throw new Error(data?.error || "Translation failed");
   }
 
   if (!data?.translatedText || typeof data.translatedText !== "string") {

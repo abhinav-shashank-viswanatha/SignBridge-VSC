@@ -27,12 +27,6 @@ type Status =
   | "processing"
   | "error";
 
-type SignGesture = {
-  key: string;
-  emoji: string;
-  word: string;
-};
-
 const languageOptions = [
   { label: "English", code: "en" },
   { label: "Spanish", code: "es" },
@@ -58,121 +52,181 @@ languageOptions.forEach((l) => {
 
 const speechLangMap: Record<string, string> = {
   English: "en-US",
+  Hindi: "hi-IN",
   Spanish: "es-ES",
   French: "fr-FR",
   German: "de-DE",
-  Hindi: "hi-IN",
+  Chinese: "zh-CN",
+  Japanese: "ja-JP",
+  Korean: "ko-KR",
   Arabic: "ar-SA",
   Portuguese: "pt-PT",
   Russian: "ru-RU",
-  Japanese: "ja-JP",
-  Korean: "ko-KR",
   Italian: "it-IT",
   Dutch: "nl-NL",
   Turkish: "tr-TR",
-  Chinese: "zh-CN",
   Indonesian: "id-ID",
 };
 
-const ttsLangMap: Record<string, string> = {
-  English: "en-US",
-  Spanish: "es-ES",
-  French: "fr-FR",
-  German: "de-DE",
-  Hindi: "hi-IN",
-  Arabic: "ar-SA",
-  Portuguese: "pt-PT",
-  Russian: "ru-RU",
-  Japanese: "ja-JP",
-  Korean: "ko-KR",
-  Italian: "it-IT",
-  Dutch: "nl-NL",
-  Turkish: "tr-TR",
-  Chinese: "zh-CN",
-  Indonesian: "id-ID",
-};
-
-// Simple fallback dictionary for demo/offline behavior
+// Fallback local dictionary
 const demoTranslations: Record<string, Record<string, string>> = {
   Spanish: {
     hello: "hola",
     hi: "hola",
-    thanks: "gracias",
     "thank you": "gracias",
+    thanks: "gracias",
+    bye: "adiós",
+    goodbye: "adiós",
+    "good morning": "buenos días",
+    "good afternoon": "buenas tardes",
+    "good evening": "buenas tardes",
+    "good night": "buenas noches",
+    "how are you": "¿cómo estás?",
+    please: "por favor",
     yes: "sí",
     no: "no",
-    help: "ayuda",
-    love: "amor",
-    stop: "alto",
-    one: "uno",
-    peace: "paz",
-    ok: "de acuerdo",
-    welcome: "bienvenido",
     sorry: "lo siento",
+    "excuse me": "disculpe",
+    welcome: "bienvenido",
+    help: "ayuda",
+    "i love you": "te quiero",
+    friend: "amigo",
     water: "agua",
     food: "comida",
-    friend: "amigo",
-    please: "por favor",
+    "my name is": "mi nombre es",
+    "nice to meet you": "encantado de conocerte",
+    "see you later": "hasta luego",
+    "i dont understand": "no entiendo",
+    "can you help me": "¿puedes ayudarme?",
+    "where is": "¿dónde está?",
   },
   French: {
     hello: "bonjour",
     hi: "salut",
-    thanks: "merci",
     "thank you": "merci",
+    thanks: "merci",
+    bye: "au revoir",
+    goodbye: "au revoir",
+    "good morning": "bonjour",
+    "good afternoon": "bon après-midi",
+    "good evening": "bonsoir",
+    "good night": "bonne nuit",
+    "how are you": "comment allez-vous?",
+    please: "s'il vous plaît",
     yes: "oui",
     no: "non",
-    help: "aide",
-    love: "amour",
-    stop: "arrête",
-    one: "un",
-    peace: "paix",
-    ok: "d'accord",
-    welcome: "bienvenue",
     sorry: "désolé",
+    "excuse me": "excusez-moi",
+    welcome: "bienvenue",
+    help: "aide",
+    "i love you": "je t'aime",
+    friend: "ami",
     water: "eau",
     food: "nourriture",
-    friend: "ami",
-    please: "s'il vous plaît",
   },
   Hindi: {
     hello: "नमस्ते",
     hi: "नमस्ते",
-    thanks: "धन्यवाद",
     "thank you": "धन्यवाद",
+    thanks: "शुक्रिया",
+    bye: "अलविदा",
+    goodbye: "अलविदा",
+    "good morning": "सुप्रभात",
+    "good afternoon": "शुभ अपराह्न",
+    "good evening": "शुभ संध्या",
+    "good night": "शुभ रात्रि",
+    "how are you": "आप कैसे हैं?",
+    please: "कृपया",
     yes: "हाँ",
     no: "नहीं",
-    help: "मदद",
-    love: "प्यार",
-    stop: "रुको",
-    one: "एक",
-    peace: "शांति",
-    ok: "ठीक है",
-    welcome: "स्वागत है",
     sorry: "माफ़ कीजिए",
+    "excuse me": "क्षमा करें",
+    welcome: "स्वागत है",
+    help: "मदद",
+    "i love you": "मैं तुमसे प्यार करता हूँ",
+    friend: "दोस्त",
     water: "पानी",
     food: "खाना",
-    friend: "दोस्त",
-    please: "कृपया",
   },
   German: {
     hello: "hallo",
     hi: "hallo",
-    thanks: "danke",
     "thank you": "danke",
+    thanks: "danke",
+    bye: "tschüss",
+    goodbye: "auf wiedersehen",
+    "good morning": "guten morgen",
+    "good afternoon": "guten tag",
+    "good evening": "guten abend",
+    "good night": "gute nacht",
+    "how are you": "wie geht es ihnen?",
+    please: "bitte",
     yes: "ja",
     no: "nein",
-    help: "hilfe",
-    love: "liebe",
-    stop: "stopp",
-    one: "eins",
-    peace: "frieden",
-    ok: "okay",
-    welcome: "willkommen",
     sorry: "entschuldigung",
-    water: "wasser",
-    food: "essen",
-    friend: "freund",
-    please: "bitte",
+    welcome: "willkommen",
+    help: "hilfe",
+    "i love you": "ich liebe dich",
+  },
+  Arabic: {
+    hello: "مرحبا",
+    hi: "أهلاً",
+    "thank you": "شكرا",
+    thanks: "شكرا",
+    bye: "مع السلامة",
+    goodbye: "مع السلامة",
+    "good morning": "صباح الخير",
+    "good afternoon": "مساء الخير",
+    "good evening": "مساء الخير",
+    "good night": "تصبح على خير",
+    "how are you": "كيف حالك؟",
+    please: "من فضلك",
+    yes: "نعم",
+    no: "لا",
+    sorry: "آسف",
+    welcome: "أهلاً وسهلاً",
+    help: "مساعدة",
+    "i love you": "أحبك",
+  },
+  Japanese: {
+    hello: "こんにちは",
+    hi: "やあ",
+    "thank you": "ありがとう",
+    thanks: "ありがとう",
+    bye: "さようなら",
+    goodbye: "さようなら",
+    "good morning": "おはようございます",
+    "good afternoon": "こんにちは",
+    "good evening": "こんばんは",
+    "good night": "おやすみなさい",
+    "how are you": "お元気ですか？",
+    please: "お願いします",
+    yes: "はい",
+    no: "いいえ",
+    sorry: "すみません",
+    welcome: "ようこそ",
+    help: "助けて",
+    "i love you": "愛してる",
+  },
+  Korean: {
+    hello: "안녕하세요",
+    hi: "안녕",
+    "thank you": "감사합니다",
+    thanks: "고마워요",
+    bye: "안녕히 가세요",
+    goodbye: "안녕히 가세요",
+    "good morning": "좋은 아침",
+    "good afternoon": "좋은 오후",
+    "good evening": "좋은 저녁",
+    "good night": "안녕히 주무세요",
+    "how are you": "어떻게 지내세요?",
+    please: "제발",
+    yes: "네",
+    no: "아니요",
+    sorry: "죄송합니다",
+    welcome: "환영합니다",
+    help: "도와주세요",
+    "i love you": "사랑해요",
   },
 };
 
@@ -183,37 +237,18 @@ const localTranslate = (text: string, targetLang: string): string | null => {
   return dict[lower] || null;
 };
 
-const signGestureSequence: SignGesture[] = [
-  { key: "hello", emoji: "👋", word: "Hello" },
-  { key: "thanks", emoji: "🙏", word: "Thank you" },
-  { key: "yes", emoji: "👍", word: "Yes" },
-  { key: "no", emoji: "✋", word: "No" },
-  { key: "please", emoji: "🤲", word: "Please" },
-  { key: "help", emoji: "🆘", word: "Help" },
-  { key: "love", emoji: "❤️", word: "Love" },
-  { key: "stop", emoji: "✊", word: "Stop" },
-  { key: "one", emoji: "☝️", word: "One" },
-  { key: "peace", emoji: "✌️", word: "Peace" },
-  { key: "ok", emoji: "👌", word: "OK" },
-  { key: "hi", emoji: "🤚", word: "Hi" },
+const signGestureSequence = [
+  { emoji: "👋", word: "Hello", delay: 0 },
+  { emoji: "🙏", word: "Thank you", delay: 1 },
+  { emoji: "👍", word: "Yes", delay: 2 },
+  { emoji: "✋", word: "No", delay: 3 },
+  { emoji: "🤲", word: "Please", delay: 4 },
+  { emoji: "🆘", word: "Help", delay: 5 },
+  { emoji: "❤️", word: "Love", delay: 6 },
+  { emoji: "👊", word: "Strong", delay: 7 },
 ];
 
-const signWordToEmoji: Record<string, string> = {
-  hello: "👋",
-  hi: "🤚",
-  "thank you": "🙏",
-  thanks: "🙏",
-  yes: "👍",
-  no: "✋",
-  please: "🤲",
-  help: "🆘",
-  love: "❤️",
-  stop: "✊",
-  one: "☝️",
-  peace: "✌️",
-  ok: "👌",
-};
-
+// ----- MediaPipe helpers -----
 const MEDIAPIPE_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe";
 
 function loadScript(src: string): Promise<void> {
@@ -253,75 +288,47 @@ function detectGesture(landmarks: any[]): string {
     thumbTip.y - indexTip.y
   );
 
-<<<<<<< HEAD
-=======
-  // 👍 Yes
->>>>>>> d2957763e7f80fcbe11e47324d4f5855516cf907
+  // 👍 YES — thumb up, all fingers curled
   if (thumbTip.y < wrist.y && !indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "Yes";
   }
 
-  // 👋 Hello (open palm)
+  // ✋ HELLO — open palm, all fingers up
   if (indexUp && middleUp && ringUp && pinkyUp) {
     return "Hello";
   }
 
-  // ✌️ Peace
+  // ✌️ PEACE — index + middle up only
   if (indexUp && middleUp && !ringUp && !pinkyUp) {
     return "Peace";
   }
 
-  // ✊ Stop
+  // ✊ STOP — fist, no fingers up
   if (!indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "Stop";
   }
 
-  // ☝️ One
+  // ☝️ ONE — index finger only
   if (indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "One";
   }
 
-  // 👌 OK
+  // 👌 OK — thumb + index close together
   if (thumbIndexDist < 0.05) {
     return "OK";
   }
 
-  // ❤️ Love / ILY style
+  // 🤟 LOVE — index + pinky up, middle + ring down
   if (indexUp && !middleUp && !ringUp && pinkyUp) {
     return "Love";
   }
 
-  // 🤚 Hi
+  // 🤚 HI — index + middle + ring up, pinky down
   if (indexUp && middleUp && ringUp && !pinkyUp) {
     return "Hi";
   }
 
   return "";
-}
-
-function makeSignSequenceFromText(text: string): SignGesture[] {
-  const words = text
-    .toLowerCase()
-    .replace(/[?.!,]/g, "")
-    .split(/\s+/)
-    .filter(Boolean);
-
-  const seen: SignGesture[] = [];
-
-  for (const word of words) {
-    const emoji = signWordToEmoji[word];
-    if (emoji) {
-      seen.push({
-        key: word,
-        emoji,
-        word: word.charAt(0).toUpperCase() + word.slice(1),
-      });
-    }
-  }
-
-  if (seen.length > 0) return seen;
-
-  return signGestureSequence.slice(0, 6);
 }
 
 const Demo = () => {
@@ -350,10 +357,6 @@ const Demo = () => {
   const mpCameraRef = useRef<any>(null);
   const isTranslatingRef = useRef(false);
   const gestureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastGestureRef = useRef<string>("");
-  const stableGestureRef = useRef<string>("");
-
-  const displayedSignSequence = makeSignSequenceFromText(translatedText);
 
   const apiTranslate = async (
     text: string,
@@ -362,12 +365,8 @@ const Demo = () => {
   ): Promise<string> => {
     const sourceCode = langCodeMap[sourceLangLabel] || "en";
     const targetCode = langCodeMap[targetLangLabel] || "es";
-
-    if (sourceCode === targetCode) {
-      throw new Error("Please select two different languages");
-    }
-
     const result = await translateText(text, sourceCode, targetCode);
+    console.log("Translation API response:", result);
 
     if (!result || typeof result !== "string") {
       throw new Error("No translated text returned");
@@ -376,78 +375,58 @@ const Demo = () => {
     return result;
   };
 
+  // Speech recognition
   const startListening = useCallback(() => {
     const SpeechRecognition =
       (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setErrorMsg("Speech recognition is not supported in this browser.");
-      setStatus("error");
-      setTimeout(() => setStatus("ready"), 2500);
+      setTranscript("Speech recognition not supported in this browser.");
       return;
     }
 
-    try {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = speechLangMap[sourceLang] || "en-US";
+    const recognition = new SpeechRecognition();
 
-      recognition.onstart = () => {
-        setStatus("listening");
-        setTranscript("");
-        setTranslatedText("");
-        setErrorMsg("");
-        setTranslationSource("");
-      };
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = speechLangMap[sourceLang] || "en-US";
 
-      recognition.onresult = (event: any) => {
-        let finalTranscript = "";
-        let interimTranscript = "";
+    recognition.onresult = (event: any) => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const spokenText = event.results[i][0].transcript;
 
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-          const piece = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += piece + " ";
-          } else {
-            interimTranscript += piece;
-          }
+        if (event.results[i].isFinal) {
+          setTranscript((prev) => `${prev} ${spokenText}`.trim());
         }
+      }
+    };
 
-        setTranscript((finalTranscript + interimTranscript).trim());
-      };
+    recognition.onerror = (event: any) => {
+      console.error("Speech error:", event.error);
+      setStatus("ready");
+      setErrorMsg(`Speech error: ${event.error}`);
+    };
 
-      recognition.onerror = (event: any) => {
-        console.error("Speech recognition error:", event.error);
-        setErrorMsg(`Speech error: ${event.error}`);
-        setStatus("error");
-        setTimeout(() => setStatus("ready"), 2500);
-      };
+    recognition.onend = () => {
+      setStatus("ready");
+    };
 
-      recognition.onend = () => {
-        setStatus("ready");
-      };
+    recognitionRef.current = recognition;
+    recognition.start();
 
-      recognitionRef.current = recognition;
-      recognition.start();
-    } catch (err) {
-      console.error("Speech start failed:", err);
-      setErrorMsg("Could not start microphone.");
-      setStatus("error");
-      setTimeout(() => setStatus("ready"), 2500);
-    }
+    setStatus("listening");
+    setTranscript("");
+    setTranslatedText("");
+    setErrorMsg("");
   }, [sourceLang]);
 
   const stopListening = useCallback(() => {
-    try {
-      recognitionRef.current?.stop();
-    } catch (err) {
-      console.error("Speech stop failed:", err);
-    }
+    recognitionRef.current?.stop();
     setStatus("ready");
   }, []);
 
+  // Camera with MediaPipe Hands
   const startCamera = useCallback(async () => {
     try {
       if (!mediaPipeLoaded) {
@@ -470,11 +449,6 @@ const Demo = () => {
       }
 
       setStatus("detecting");
-      setTranscript("");
-      setInputText("");
-      setTranslatedText("");
-      setErrorMsg("");
-      setDetectedGesture("");
 
       const mpHands = (window as any).Hands;
       const mpCamera = (window as any).Camera;
@@ -542,21 +516,12 @@ const Demo = () => {
 
                 const gesture = detectGesture(landmarks);
                 setDetectedGesture(gesture);
+                setTranscript(gesture);
 
-                if (!gesture) return;
-
-                if (gesture !== lastGestureRef.current) {
-                  lastGestureRef.current = gesture;
-                  if (gestureTimeoutRef.current) {
-                    clearTimeout(gestureTimeoutRef.current);
-                  }
-
-                  gestureTimeoutRef.current = setTimeout(() => {
-                    stableGestureRef.current = gesture;
-                    setTranscript(gesture);
-                    setInputText(gesture);
-                  }, 1200);
-                }
+                if (gestureTimeoutRef.current) clearTimeout(gestureTimeoutRef.current);
+                gestureTimeoutRef.current = setTimeout(() => {
+                  setInputText(gesture);
+                }, 1500);
               }
             }
           }
@@ -577,29 +542,15 @@ const Demo = () => {
         mpCameraRef.current = camera;
         camera.start();
       } else {
-        console.log("Using simulated sign detection fallback");
-        const gestures = [
-          "Hello",
-          "Yes",
-          "No",
-          "Help",
-          "Love",
-          "Peace",
-          "One",
-          "OK",
-          "Stop",
-          "Hi",
-        ];
-
+        console.log("Using simulated sign detection (MediaPipe not available)");
+        const gestures = ["Hello", "Thank you", "Yes", "No", "Please", "Help"];
         let idx = 0;
         const interval = setInterval(() => {
           const gesture = gestures[idx % gestures.length];
           setDetectedGesture(gesture);
           setTranscript(gesture);
-          setInputText(gesture);
           idx++;
         }, 3000);
-
         (streamRef.current as any).__fallbackInterval = interval;
       }
     } catch {
@@ -632,20 +583,8 @@ const Demo = () => {
     }
 
     if (gestureTimeoutRef.current) clearTimeout(gestureTimeoutRef.current);
-
-    lastGestureRef.current = "";
-    stableGestureRef.current = "";
     setDetectedGesture("");
     setStatus("ready");
-  }, []);
-
-  useEffect(() => {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.getVoices();
-      window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.getVoices();
-      };
-    }
   }, []);
 
   useEffect(() => {
@@ -676,18 +615,17 @@ const Demo = () => {
     };
   }, []);
 
+  // Sign animation cycling
   useEffect(() => {
     if (outputMode === "sign" && translatedText) {
       const interval = setInterval(() => {
-        setSignAnimIndex((prev) =>
-          displayedSignSequence.length > 0 ? (prev + 1) % displayedSignSequence.length : 0
-        );
+        setSignAnimIndex((prev) => (prev + 1) % signGestureSequence.length);
       }, 1500);
-
       return () => clearInterval(interval);
     }
-  }, [outputMode, translatedText, displayedSignSequence.length]);
+  }, [outputMode, translatedText]);
 
+  // Translation pipeline
   const handleTranslate = useCallback(async () => {
     if (isTranslatingRef.current) return;
 
@@ -718,7 +656,6 @@ const Demo = () => {
     setStatus("translating");
     setErrorMsg("");
     setTranslatedText("");
-    setTranslationSource("");
 
     try {
       const result = await apiTranslate(textToTranslate, sourceLang, targetLang);
@@ -727,7 +664,7 @@ const Demo = () => {
       setStatus("ready");
 
       if (outputMode === "speech") {
-        setTimeout(() => speakText(result), 250);
+        speakText(result);
       }
     } catch (err) {
       console.error("Translate error:", err);
@@ -739,14 +676,12 @@ const Demo = () => {
         setStatus("ready");
 
         if (outputMode === "speech") {
-          setTimeout(() => speakText(localResult), 250);
+          speakText(localResult);
         }
       } else {
-        setErrorMsg(
-          err instanceof Error ? err.message : "Translation failed. Try again."
-        );
+        setErrorMsg("Translation failed. Try again.");
         setStatus("error");
-        setTimeout(() => setStatus("ready"), 3000);
+        setTimeout(() => setStatus("ready"), 2000);
       }
     } finally {
       isTranslatingRef.current = false;
@@ -754,63 +689,18 @@ const Demo = () => {
   }, [inputMode, inputText, transcript, sourceLang, targetLang, outputMode]);
 
   const speakText = (text: string) => {
-    try {
-      if (!("speechSynthesis" in window)) {
-        setErrorMsg("Text-to-speech is not supported in this browser.");
-        setStatus("error");
-        setTimeout(() => setStatus("ready"), 2500);
-        return;
-      }
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
 
-      const synth = window.speechSynthesis;
-      synth.cancel();
+    const targetCode = langCodeMap[targetLang];
+    if (targetCode) utterance.lang = targetCode;
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      utterance.volume = 1;
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
 
-      const targetLocale = ttsLangMap[targetLang] || "en-US";
-      const voices = synth.getVoices();
-
-      const matchedVoice =
-        voices.find(
-          (voice) => voice.lang.toLowerCase() === targetLocale.toLowerCase()
-        ) ||
-        voices.find((voice) =>
-          voice.lang
-            .toLowerCase()
-            .startsWith(targetLocale.slice(0, 2).toLowerCase())
-        ) ||
-        voices[0];
-
-      if (matchedVoice) {
-        utterance.voice = matchedVoice;
-        utterance.lang = matchedVoice.lang;
-      } else {
-        utterance.lang = targetLocale;
-      }
-
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = (event) => {
-        console.error("Audio error:", event);
-        setIsSpeaking(false);
-        setErrorMsg("Audio playback failed");
-        setStatus("error");
-        setTimeout(() => setStatus("ready"), 2500);
-      };
-
-      setTimeout(() => {
-        synth.speak(utterance);
-      }, 100);
-    } catch (err) {
-      console.error("Audio Playback failed", err);
-      setIsSpeaking(false);
-      setErrorMsg("Audio playback failed");
-      setStatus("error");
-      setTimeout(() => setStatus("ready"), 2500);
-    }
+    speechSynthesis.speak(utterance);
   };
 
   const toggleSpeech = () => {
@@ -837,8 +727,6 @@ const Demo = () => {
     setDetectedGesture("");
     speechSynthesis.cancel();
     setIsSpeaking(false);
-    lastGestureRef.current = "";
-    stableGestureRef.current = "";
   };
 
   const statusConfig: Record<Status, { color: string; label: string }> = {
@@ -858,6 +746,7 @@ const Demo = () => {
   return (
     <div className="py-12 px-6 min-h-[calc(100svh-4rem)]">
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -871,12 +760,14 @@ const Demo = () => {
           </p>
         </motion.div>
 
+        {/* Status + Language bar */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="flex flex-wrap items-center justify-center gap-4 mb-8"
         >
+          {/* Status */}
           <div className="flex items-center gap-2 px-4 py-2 rounded-full glass font-mono text-xs">
             <span className="relative flex h-2 w-2">
               {status !== "ready" && (
@@ -893,6 +784,7 @@ const Demo = () => {
             <span className="text-muted-foreground">{currentStatus.label}</span>
           </div>
 
+          {/* Language selector */}
           <div className="flex items-center gap-1">
             <div className="relative">
               <button
@@ -974,6 +866,7 @@ const Demo = () => {
             </div>
           </div>
 
+          {/* Reset button */}
           <button
             onClick={handleReset}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg glass text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -982,6 +875,7 @@ const Demo = () => {
           </button>
         </motion.div>
 
+        {/* Error message */}
         <AnimatePresence>
           {errorMsg && (
             <motion.div
@@ -997,13 +891,16 @@ const Demo = () => {
           )}
         </AnimatePresence>
 
+        {/* Main panels */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* INPUT PANEL */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
             className="glass rounded-2xl overflow-hidden"
           >
+            {/* Input mode tabs */}
             <div className="flex border-b border-border">
               {[
                 { mode: "text" as InputMode, icon: Type, label: "Text" },
@@ -1033,6 +930,7 @@ const Demo = () => {
               ))}
             </div>
 
+            {/* Input content */}
             <div className="p-6 min-h-[300px] flex flex-col">
               <AnimatePresence mode="wait">
                 {inputMode === "text" && (
@@ -1110,7 +1008,6 @@ const Demo = () => {
                         />
                       ))}
                     </div>
-
                     <button
                       onClick={status === "listening" ? stopListening : startListening}
                       disabled={status === "translating"}
@@ -1126,13 +1023,11 @@ const Demo = () => {
                         <Mic className="h-6 w-6 text-muted-foreground" />
                       )}
                     </button>
-
                     <p className="text-sm text-muted-foreground">
                       {status === "listening"
                         ? "Listening — tap to stop"
                         : "Tap the microphone to start"}
                     </p>
-
                     {transcript && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -1185,16 +1080,13 @@ const Demo = () => {
                             </div>
                           )}
                           <div className="absolute bottom-2 left-2 right-2 px-2 py-1 rounded-md bg-background/70 text-foreground text-xs font-mono text-center backdrop-blur-sm">
-                            {transcript
-                              ? `Detected text: "${transcript}"`
-                              : detectedGesture
-                              ? `Current gesture: "${detectedGesture}"`
+                            {detectedGesture
+                              ? `Detected: "${detectedGesture}"`
                               : "Detecting signs..."}
                           </div>
                         </>
                       )}
                     </div>
-
                     <button
                       onClick={status === "detecting" ? stopCamera : startCamera}
                       disabled={status === "translating" || status === "processing"}
@@ -1220,7 +1112,6 @@ const Demo = () => {
                         </span>
                       )}
                     </button>
-
                     {transcript && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -1228,7 +1119,7 @@ const Demo = () => {
                         className="w-full p-4 rounded-xl bg-card text-foreground text-sm"
                       >
                         <span className="text-xs text-muted-foreground block mb-1">
-                          Sign detected as text:
+                          Detected gesture:
                         </span>
                         {transcript}
                       </motion.div>
@@ -1239,12 +1130,14 @@ const Demo = () => {
             </div>
           </motion.div>
 
+          {/* OUTPUT PANEL */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             className="glass rounded-2xl overflow-hidden"
           >
+            {/* Output mode tabs */}
             <div className="flex border-b border-border">
               {[
                 { mode: "text" as OutputMode, icon: Type, label: "Text" },
@@ -1275,6 +1168,7 @@ const Demo = () => {
               ))}
             </div>
 
+            {/* Output content */}
             <div className="p-6 min-h-[300px] flex flex-col">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
@@ -1304,9 +1198,7 @@ const Demo = () => {
                       className="flex flex-col items-center gap-3"
                     >
                       <Loader2 className="h-8 w-8 text-primary animate-spin" />
-                      <span className="text-sm text-muted-foreground">
-                        Translating...
-                      </span>
+                      <span className="text-sm text-muted-foreground">Translating...</span>
                     </motion.div>
                   ) : translatedText ? (
                     <motion.div
@@ -1342,7 +1234,6 @@ const Demo = () => {
                           </div>
                         </div>
                       )}
-
                       {outputMode === "speech" && (
                         <div className="flex flex-col items-center gap-6">
                           <p className="text-xl font-medium text-foreground text-center">
@@ -1392,43 +1283,39 @@ const Demo = () => {
                           </div>
                         </div>
                       )}
-
                       {outputMode === "sign" && (
                         <div className="flex flex-col items-center gap-6">
                           <div className="relative">
                             <AnimatePresence mode="wait">
                               <motion.div
-                                key={`${displayedSignSequence[signAnimIndex]?.key || "fallback"}-${signAnimIndex}`}
+                                key={signAnimIndex}
                                 initial={{ scale: 0.5, opacity: 0, rotateY: -90 }}
                                 animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                                 exit={{ scale: 0.5, opacity: 0, rotateY: 90 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 className="text-7xl"
                               >
-                                {displayedSignSequence[signAnimIndex]?.emoji || "🤟"}
+                                {signGestureSequence[signAnimIndex].emoji}
                               </motion.div>
                             </AnimatePresence>
                           </div>
-                          <p className="text-lg font-medium text-foreground">
-                            {translatedText}
-                          </p>
-                          <div className="flex items-center gap-2 flex-wrap justify-center">
-                            {displayedSignSequence.map((g, i) => (
+                          <p className="text-lg font-medium text-foreground">{translatedText}</p>
+                          <div className="flex items-center gap-2">
+                            {signGestureSequence.slice(0, 6).map((g, i) => (
                               <motion.span
-                                key={`${g.key}-${i}`}
+                                key={i}
                                 className={`text-2xl cursor-pointer transition-opacity ${
-                                  i === signAnimIndex ? "opacity-100" : "opacity-30"
+                                  i === signAnimIndex % 6 ? "opacity-100" : "opacity-30"
                                 }`}
                                 whileHover={{ scale: 1.2 }}
                                 onClick={() => setSignAnimIndex(i)}
-                                title={g.word}
                               >
                                 {g.emoji}
                               </motion.span>
                             ))}
                           </div>
                           <p className="text-xs text-muted-foreground">
-                            Sign sequence based on translated text
+                            Sign language gesture sequence
                           </p>
                         </div>
                       )}
@@ -1449,6 +1336,7 @@ const Demo = () => {
           </motion.div>
         </div>
 
+        {/* Translate button */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

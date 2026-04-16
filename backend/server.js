@@ -18,15 +18,21 @@ app.get("/health", (req, res) => {
 });
 
 app.post("/translate", async (req, res) => {
-  const { text, target } = req.body;
+  const { text, source, target } = req.body;
 
-  if (!text || !target) {
+  if (!text || !source || !target) {
     return res.status(400).json({
-      error: "Missing text or target",
+      error: "Missing text, source, or target",
     });
   }
 
-  console.log("Incoming request:", { text, target });
+  if (source === target) {
+    return res.status(400).json({
+      error: "Please select two different languages",
+    });
+  }
+
+  console.log("Incoming request:", { text, source, target });
 
   try {
     // Provider 1: Argos OpenTech
@@ -34,7 +40,7 @@ app.post("/translate", async (req, res) => {
       "https://translate.argosopentech.com/translate",
       {
         q: text,
-        source: "en",
+        source,
         target,
         format: "text",
       },
@@ -65,7 +71,7 @@ app.post("/translate", async (req, res) => {
         {
           params: {
             q: text,
-            langpair: `en|${target}`,
+            langpair: `${source}|${target}`,
           },
           timeout: 15000,
         }

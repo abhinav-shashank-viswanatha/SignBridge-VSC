@@ -5,9 +5,6 @@ export async function translateText(
 ): Promise<string> {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-  console.log("BACKEND_URL:", BACKEND_URL);
-  console.log("Sending request:", { text, source, target });
-
   if (!BACKEND_URL) {
     throw new Error("Backend URL not configured");
   }
@@ -22,6 +19,8 @@ export async function translateText(
 
   const data = await res.json();
 
+  console.log("BACKEND_URL:", BACKEND_URL);
+  console.log("Sending request:", { text, source, target });
   console.log("Response status:", res.status);
   console.log("Response data:", data);
 
@@ -29,7 +28,7 @@ export async function translateText(
     throw new Error(data?.error || "Translation failed");
   }
 
-  if (!data?.translatedText || typeof data.translatedText !== "string") {
+  if (!data?.translatedText) {
     throw new Error("No translated text returned");
   }
 

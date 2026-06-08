@@ -1,12 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+<<<<<<< HEAD
 const axios = require("axios"); // Added axios for consistent, reliable request handling
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+<<<<<<< HEAD
 // Fallbacks: Checks if an engine URL environment flag is active, or uses community endpoints
 const LIBRETRANSLATE_URL = process.env.LIBRETRANSLATE_URL || "https://lt.it.cx";
 const GOOGLE_API_URL = "https://translate.googleapis.com/translate_a/single";
@@ -91,3 +95,34 @@ app.post("/translate", async (req, res) => {
 app.listen(5000, () => {
   console.log("Frontend helper server running on port 5000 🚀");
 });
+=======
+app.post("/translate", async (req, res) => {
+  const { text, target } = req.body;
+
+  try {
+    const response = await fetch("https://libretranslate.de/translate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        q: text,
+        source: "auto",
+        target: target,
+        format: "text"
+      })
+    });
+
+    const data = await response.json();
+
+    res.json({ translatedText: data.translatedText });
+
+  } catch (error) {
+    res.json({ translatedText: "Translation failed" });
+  }
+});
+
+app.listen(5000, () => {
+  console.log("Server running on port 5000");
+});
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a

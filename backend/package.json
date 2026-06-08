@@ -8,9 +8,15 @@
     "start": "node server.js"
   },
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^1.17.0",
     "cors": "^2.8.6",
     "express": "^4.22.2",
+=======
+    "axios": "^1.13.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
     "node-fetch": "^2.6.7"
   }
 }

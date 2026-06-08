@@ -27,12 +27,15 @@ type Status =
   | "processing"
   | "error";
 
+<<<<<<< HEAD
 type SignGesture = {
   key: string;
   emoji: string;
   word: string;
 };
 
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 const languageOptions = [
   { label: "English", code: "en" },
   { label: "Spanish", code: "es" },
@@ -51,6 +54,7 @@ const languageOptions = [
   { label: "Indonesian", code: "id" },
 ];
 
+<<<<<<< HEAD
 // UPDATED: Custom explicit code mappings applied directly here
 const langCodeMap: Record<string, string> = {
   English: "en",
@@ -107,10 +111,37 @@ const ttsLangMap: Record<string, string> = {
 };
 
 // Simple fallback dictionary for demo/offline behavior
+=======
+const langCodeMap: Record<string, string> = {};
+languageOptions.forEach((l) => {
+  langCodeMap[l.label] = l.code;
+});
+
+const speechLangMap: Record<string, string> = {
+  English: "en-US",
+  Hindi: "hi-IN",
+  Spanish: "es-ES",
+  French: "fr-FR",
+  German: "de-DE",
+  Chinese: "zh-CN",
+  Japanese: "ja-JP",
+  Korean: "ko-KR",
+  Arabic: "ar-SA",
+  Portuguese: "pt-PT",
+  Russian: "ru-RU",
+  Italian: "it-IT",
+  Dutch: "nl-NL",
+  Turkish: "tr-TR",
+  Indonesian: "id-ID",
+};
+
+// Fallback local dictionary
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 const demoTranslations: Record<string, Record<string, string>> = {
   Spanish: {
     hello: "hola",
     hi: "hola",
+<<<<<<< HEAD
     thanks: "gracias",
     "thank you": "gracias",
     yes: "sí",
@@ -127,10 +158,39 @@ const demoTranslations: Record<string, Record<string, string>> = {
     food: "comida",
     friend: "amigo",
     please: "por favor",
+=======
+    "thank you": "gracias",
+    thanks: "gracias",
+    bye: "adiós",
+    goodbye: "adiós",
+    "good morning": "buenos días",
+    "good afternoon": "buenas tardes",
+    "good evening": "buenas tardes",
+    "good night": "buenas noches",
+    "how are you": "¿cómo estás?",
+    please: "por favor",
+    yes: "sí",
+    no: "no",
+    sorry: "lo siento",
+    "excuse me": "disculpe",
+    welcome: "bienvenido",
+    help: "ayuda",
+    "i love you": "te quiero",
+    friend: "amigo",
+    water: "agua",
+    food: "comida",
+    "my name is": "mi nombre es",
+    "nice to meet you": "encantado de conocerte",
+    "see you later": "hasta luego",
+    "i dont understand": "no entiendo",
+    "can you help me": "¿puedes ayudarme?",
+    "where is": "¿dónde está?",
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   },
   French: {
     hello: "bonjour",
     hi: "salut",
+<<<<<<< HEAD
     thanks: "merci",
     "thank you": "merci",
     yes: "oui",
@@ -147,10 +207,33 @@ const demoTranslations: Record<string, Record<string, string>> = {
     food: "nourriture",
     friend: "ami",
     please: "s'il vous plaît",
+=======
+    "thank you": "merci",
+    thanks: "merci",
+    bye: "au revoir",
+    goodbye: "au revoir",
+    "good morning": "bonjour",
+    "good afternoon": "bon après-midi",
+    "good evening": "bonsoir",
+    "good night": "bonne nuit",
+    "how are you": "comment allez-vous?",
+    please: "s'il vous plaît",
+    yes: "oui",
+    no: "non",
+    sorry: "désolé",
+    "excuse me": "excusez-moi",
+    welcome: "bienvenue",
+    help: "aide",
+    "i love you": "je t'aime",
+    friend: "ami",
+    water: "eau",
+    food: "nourriture",
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   },
   Hindi: {
     hello: "नमस्ते",
     hi: "नमस्ते",
+<<<<<<< HEAD
     thanks: "धन्यवाद",
     "thank you": "धन्यवाद",
     yes: "हाँ",
@@ -167,10 +250,33 @@ const demoTranslations: Record<string, Record<string, string>> = {
     food: "खाना",
     friend: "दोस्त",
     please: "कृपया",
+=======
+    "thank you": "धन्यवाद",
+    thanks: "शुक्रिया",
+    bye: "अलविदा",
+    goodbye: "अलविदा",
+    "good morning": "सुप्रभात",
+    "good afternoon": "शुभ अपराह्न",
+    "good evening": "शुभ संध्या",
+    "good night": "शुभ रात्रि",
+    "how are you": "आप कैसे हैं?",
+    please: "कृपया",
+    yes: "हाँ",
+    no: "नहीं",
+    sorry: "माफ़ कीजिए",
+    "excuse me": "क्षमा करें",
+    welcome: "स्वागत है",
+    help: "मदद",
+    "i love you": "मैं तुमसे प्यार करता हूँ",
+    friend: "दोस्त",
+    water: "पानी",
+    food: "खाना",
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   },
   German: {
     hello: "hallo",
     hi: "hallo",
+<<<<<<< HEAD
     thanks: "danke",
     "thank you": "danke",
     yes: "ja",
@@ -221,6 +327,106 @@ const signWordToEmoji: Record<string, string> = {
   ok: "👌",
 };
 
+=======
+    "thank you": "danke",
+    thanks: "danke",
+    bye: "tschüss",
+    goodbye: "auf wiedersehen",
+    "good morning": "guten morgen",
+    "good afternoon": "guten tag",
+    "good evening": "guten abend",
+    "good night": "gute nacht",
+    "how are you": "wie geht es ihnen?",
+    please: "bitte",
+    yes: "ja",
+    no: "nein",
+    sorry: "entschuldigung",
+    welcome: "willkommen",
+    help: "hilfe",
+    "i love you": "ich liebe dich",
+  },
+  Arabic: {
+    hello: "مرحبا",
+    hi: "أهلاً",
+    "thank you": "شكرا",
+    thanks: "شكرا",
+    bye: "مع السلامة",
+    goodbye: "مع السلامة",
+    "good morning": "صباح الخير",
+    "good afternoon": "مساء الخير",
+    "good evening": "مساء الخير",
+    "good night": "تصبح على خير",
+    "how are you": "كيف حالك؟",
+    please: "من فضلك",
+    yes: "نعم",
+    no: "لا",
+    sorry: "آسف",
+    welcome: "أهلاً وسهلاً",
+    help: "مساعدة",
+    "i love you": "أحبك",
+  },
+  Japanese: {
+    hello: "こんにちは",
+    hi: "やあ",
+    "thank you": "ありがとう",
+    thanks: "ありがとう",
+    bye: "さようなら",
+    goodbye: "さようなら",
+    "good morning": "おはようございます",
+    "good afternoon": "こんにちは",
+    "good evening": "こんばんは",
+    "good night": "おやすみなさい",
+    "how are you": "お元気ですか？",
+    please: "お願いします",
+    yes: "はい",
+    no: "いいえ",
+    sorry: "すみません",
+    welcome: "ようこそ",
+    help: "助けて",
+    "i love you": "愛してる",
+  },
+  Korean: {
+    hello: "안녕하세요",
+    hi: "안녕",
+    "thank you": "감사합니다",
+    thanks: "고마워요",
+    bye: "안녕히 가세요",
+    goodbye: "안녕히 가세요",
+    "good morning": "좋은 아침",
+    "good afternoon": "좋은 오후",
+    "good evening": "좋은 저녁",
+    "good night": "안녕히 주무세요",
+    "how are you": "어떻게 지내세요?",
+    please: "제발",
+    yes: "네",
+    no: "아니요",
+    sorry: "죄송합니다",
+    welcome: "환영합니다",
+    help: "도와주세요",
+    "i love you": "사랑해요",
+  },
+};
+
+const localTranslate = (text: string, targetLang: string): string | null => {
+  const dict = demoTranslations[targetLang];
+  if (!dict) return null;
+  const lower = text.toLowerCase().replace(/[?.!,]/g, "").trim();
+  return dict[lower] || null;
+};
+
+const signGestureSequence = [
+  { emoji: "👋", word: "Hello", delay: 0 },
+  { emoji: "🙏", word: "Thank you", delay: 1 },
+  { emoji: "👍", word: "Yes", delay: 2 },
+  { emoji: "✋", word: "No", delay: 3 },
+  { emoji: "🤲", word: "Please", delay: 4 },
+  { emoji: "🆘", word: "Help", delay: 5 },
+  { emoji: "❤️", word: "Love", delay: 6 },
+  { emoji: "👊", word: "Strong", delay: 7 },
+];
+
+// ----- MediaPipe helpers -----
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 const MEDIAPIPE_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe";
 
 function loadScript(src: string): Promise<void> {
@@ -260,42 +466,74 @@ function detectGesture(landmarks: any[]): string {
     thumbTip.y - indexTip.y
   );
 
+<<<<<<< HEAD
   // 👍 Yes
+=======
+  // 👍 YES — thumb up, all fingers curled
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (thumbTip.y < wrist.y && !indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "Yes";
   }
 
+<<<<<<< HEAD
   // 👋 Hello (open palm)
+=======
+  // ✋ HELLO — open palm, all fingers up
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (indexUp && middleUp && ringUp && pinkyUp) {
     return "Hello";
   }
 
+<<<<<<< HEAD
   // ✌️ Peace
+=======
+  // ✌️ PEACE — index + middle up only
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (indexUp && middleUp && !ringUp && !pinkyUp) {
     return "Peace";
   }
 
+<<<<<<< HEAD
   // ✊ Stop
+=======
+  // ✊ STOP — fist, no fingers up
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (!indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "Stop";
   }
 
+<<<<<<< HEAD
   // ☝️ One
+=======
+  // ☝️ ONE — index finger only
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (indexUp && !middleUp && !ringUp && !pinkyUp) {
     return "One";
   }
 
+<<<<<<< HEAD
   // 👌 OK
+=======
+  // 👌 OK — thumb + index close together
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (thumbIndexDist < 0.05) {
     return "OK";
   }
 
+<<<<<<< HEAD
   // ❤️ Love / ILY style
+=======
+  // 🤟 LOVE — index + pinky up, middle + ring down
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (indexUp && !middleUp && !ringUp && pinkyUp) {
     return "Love";
   }
 
+<<<<<<< HEAD
   // 🤚 Hi
+=======
+  // 🤚 HI — index + middle + ring up, pinky down
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   if (indexUp && middleUp && ringUp && !pinkyUp) {
     return "Hi";
   }
@@ -303,6 +541,7 @@ function detectGesture(landmarks: any[]): string {
   return "";
 }
 
+<<<<<<< HEAD
 function makeSignSequenceFromText(text: string): SignGesture[] {
   const words = text
     .toLowerCase()
@@ -328,6 +567,8 @@ function makeSignSequenceFromText(text: string): SignGesture[] {
   return signGestureSequence.slice(0, 6);
 }
 
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 const Demo = () => {
   const [inputMode, setInputMode] = useState<InputMode>("text");
   const [outputMode, setOutputMode] = useState<OutputMode>("text");
@@ -354,12 +595,16 @@ const Demo = () => {
   const mpCameraRef = useRef<any>(null);
   const isTranslatingRef = useRef(false);
   const gestureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+<<<<<<< HEAD
   const lastGestureRef = useRef<string>("");
   const stableGestureRef = useRef<string>("");
 
   const displayedSignSequence = makeSignSequenceFromText(translatedText);
 
   // UPDATED: Enhanced apiTranslate configuration engine with requested log drivers
+=======
+
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   const apiTranslate = async (
     text: string,
     sourceLangLabel: string,
@@ -367,6 +612,7 @@ const Demo = () => {
   ): Promise<string> => {
     const sourceCode = langCodeMap[sourceLangLabel] || "en";
     const targetCode = langCodeMap[targetLangLabel] || "es";
+<<<<<<< HEAD
 
     console.log("Translation Request");
     console.log("Text:", text);
@@ -382,16 +628,29 @@ const Demo = () => {
     );
 
     console.log("Translation Result:", result);
+=======
+    const result = await translateText(text, sourceCode, targetCode);
+    console.log("Translation API response:", result);
+
+    if (!result || typeof result !== "string") {
+      throw new Error("No translated text returned");
+    }
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 
     return result;
   };
 
+<<<<<<< HEAD
+=======
+  // Speech recognition
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   const startListening = useCallback(() => {
     const SpeechRecognition =
       (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
+<<<<<<< HEAD
       setErrorMsg("Speech recognition is not supported in this browser.");
       setStatus("error");
       setTimeout(() => setStatus("ready"), 2500);
@@ -458,6 +717,53 @@ const Demo = () => {
     setStatus("ready");
   }, []);
 
+=======
+      setTranscript("Speech recognition not supported in this browser.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = speechLangMap[sourceLang] || "en-US";
+
+    recognition.onresult = (event: any) => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const spokenText = event.results[i][0].transcript;
+
+        if (event.results[i].isFinal) {
+          setTranscript((prev) => `${prev} ${spokenText}`.trim());
+        }
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech error:", event.error);
+      setStatus("ready");
+      setErrorMsg(`Speech error: ${event.error}`);
+    };
+
+    recognition.onend = () => {
+      setStatus("ready");
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+
+    setStatus("listening");
+    setTranscript("");
+    setTranslatedText("");
+    setErrorMsg("");
+  }, [sourceLang]);
+
+  const stopListening = useCallback(() => {
+    recognitionRef.current?.stop();
+    setStatus("ready");
+  }, []);
+
+  // Camera with MediaPipe Hands
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   const startCamera = useCallback(async () => {
     try {
       if (!mediaPipeLoaded) {
@@ -480,11 +786,14 @@ const Demo = () => {
       }
 
       setStatus("detecting");
+<<<<<<< HEAD
       setTranscript("");
       setInputText("");
       setTranslatedText("");
       setErrorMsg("");
       setDetectedGesture("");
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 
       const mpHands = (window as any).Hands;
       const mpCamera = (window as any).Camera;
@@ -552,6 +861,7 @@ const Demo = () => {
 
                 const gesture = detectGesture(landmarks);
                 setDetectedGesture(gesture);
+<<<<<<< HEAD
 
                 if (!gesture) return;
 
@@ -567,6 +877,14 @@ const Demo = () => {
                     setInputText(gesture);
                   }, 1200);
                 }
+=======
+                setTranscript(gesture);
+
+                if (gestureTimeoutRef.current) clearTimeout(gestureTimeoutRef.current);
+                gestureTimeoutRef.current = setTimeout(() => {
+                  setInputText(gesture);
+                }, 1500);
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
               }
             }
           }
@@ -587,6 +905,7 @@ const Demo = () => {
         mpCameraRef.current = camera;
         camera.start();
       } else {
+<<<<<<< HEAD
         console.log("Using simulated sign detection fallback");
         const gestures = [
           "Hello",
@@ -601,15 +920,24 @@ const Demo = () => {
           "Hi",
         ];
 
+=======
+        console.log("Using simulated sign detection (MediaPipe not available)");
+        const gestures = ["Hello", "Thank you", "Yes", "No", "Please", "Help"];
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
         let idx = 0;
         const interval = setInterval(() => {
           const gesture = gestures[idx % gestures.length];
           setDetectedGesture(gesture);
           setTranscript(gesture);
+<<<<<<< HEAD
           setInputText(gesture);
           idx++;
         }, 3000);
 
+=======
+          idx++;
+        }, 3000);
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
         (streamRef.current as any).__fallbackInterval = interval;
       }
     } catch {
@@ -642,14 +970,18 @@ const Demo = () => {
     }
 
     if (gestureTimeoutRef.current) clearTimeout(gestureTimeoutRef.current);
+<<<<<<< HEAD
 
     lastGestureRef.current = "";
     stableGestureRef.current = "";
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
     setDetectedGesture("");
     setStatus("ready");
   }, []);
 
   useEffect(() => {
+<<<<<<< HEAD
     if ("speechSynthesis" in window) {
       window.speechSynthesis.getVoices();
       window.speechSynthesis.onvoiceschanged = () => {
@@ -659,6 +991,8 @@ const Demo = () => {
   }, []);
 
   useEffect(() => {
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
     return () => {
       recognitionRef.current?.stop();
 
@@ -686,6 +1020,7 @@ const Demo = () => {
     };
   }, []);
 
+<<<<<<< HEAD
   useEffect(() => {
     if (outputMode === "sign" && translatedText) {
       const interval = setInterval(() => {
@@ -699,6 +1034,19 @@ const Demo = () => {
   }, [outputMode, translatedText, displayedSignSequence.length]);
 
   // UPDATED: handleTranslate tracking sequence with integrated input/output terminal monitoring
+=======
+  // Sign animation cycling
+  useEffect(() => {
+    if (outputMode === "sign" && translatedText) {
+      const interval = setInterval(() => {
+        setSignAnimIndex((prev) => (prev + 1) % signGestureSequence.length);
+      }, 1500);
+      return () => clearInterval(interval);
+    }
+  }, [outputMode, translatedText]);
+
+  // Translation pipeline
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   const handleTranslate = useCallback(async () => {
     if (isTranslatingRef.current) return;
 
@@ -729,6 +1077,7 @@ const Demo = () => {
     setStatus("translating");
     setErrorMsg("");
     setTranslatedText("");
+<<<<<<< HEAD
     setTranslationSource("");
 
     // Tracking console lines injection block
@@ -748,11 +1097,17 @@ const Demo = () => {
       console.log("Success:", result);
       console.log("TRANSLATED:", result);
 
+=======
+
+    try {
+      const result = await apiTranslate(textToTranslate, sourceLang, targetLang);
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
       setTranslatedText(result);
       setTranslationSource("api");
       setStatus("ready");
 
       if (outputMode === "speech") {
+<<<<<<< HEAD
         setTimeout(() => speakText(result), 250);
       }
     } catch (err) {
@@ -766,12 +1121,34 @@ const Demo = () => {
         }`
       );
       setStatus("error");
+=======
+        speakText(result);
+      }
+    } catch (err) {
+      console.error("Translate error:", err);
+
+      const localResult = localTranslate(textToTranslate, targetLang);
+      if (localResult) {
+        setTranslatedText(localResult);
+        setTranslationSource("local");
+        setStatus("ready");
+
+        if (outputMode === "speech") {
+          speakText(localResult);
+        }
+      } else {
+        setErrorMsg("Translation failed. Try again.");
+        setStatus("error");
+        setTimeout(() => setStatus("ready"), 2000);
+      }
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
     } finally {
       isTranslatingRef.current = false;
     }
   }, [inputMode, inputText, transcript, sourceLang, targetLang, outputMode]);
 
   const speakText = (text: string) => {
+<<<<<<< HEAD
     try {
       if (!("speechSynthesis" in window)) {
         setErrorMsg("Text-to-speech is not supported in this browser.");
@@ -829,6 +1206,20 @@ const Demo = () => {
       setStatus("error");
       setTimeout(() => setStatus("ready"), 2500);
     }
+=======
+    speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+
+    const targetCode = langCodeMap[targetLang];
+    if (targetCode) utterance.lang = targetCode;
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    speechSynthesis.speak(utterance);
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   };
 
   const toggleSpeech = () => {
@@ -855,8 +1246,11 @@ const Demo = () => {
     setDetectedGesture("");
     speechSynthesis.cancel();
     setIsSpeaking(false);
+<<<<<<< HEAD
     lastGestureRef.current = "";
     stableGestureRef.current = "";
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   };
 
   const statusConfig: Record<Status, { color: string; label: string }> = {
@@ -876,6 +1270,10 @@ const Demo = () => {
   return (
     <div className="py-12 px-6 min-h-[calc(100svh-4rem)]">
       <div className="max-w-6xl mx-auto">
+<<<<<<< HEAD
+=======
+        {/* Header */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -889,12 +1287,20 @@ const Demo = () => {
           </p>
         </motion.div>
 
+<<<<<<< HEAD
+=======
+        {/* Status + Language bar */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="flex flex-wrap items-center justify-center gap-4 mb-8"
         >
+<<<<<<< HEAD
+=======
+          {/* Status */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
           <div className="flex items-center gap-2 px-4 py-2 rounded-full glass font-mono text-xs">
             <span className="relative flex h-2 w-2">
               {status !== "ready" && (
@@ -911,6 +1317,10 @@ const Demo = () => {
             <span className="text-muted-foreground">{currentStatus.label}</span>
           </div>
 
+<<<<<<< HEAD
+=======
+          {/* Language selector */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
           <div className="flex items-center gap-1">
             <div className="relative">
               <button
@@ -925,6 +1335,7 @@ const Demo = () => {
               </button>
               {showSourceDropdown && (
                 <div className="absolute top-full mt-1 left-0 z-50 glass-strong rounded-xl py-2 min-w-[160px] max-h-64 overflow-y-auto shadow-card">
+<<<<<<< HEAD
                   {Object.keys(langCodeMap).map((label) => (
                     <button
                       key={label}
@@ -934,13 +1345,30 @@ const Demo = () => {
                       }}
                       className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${
                         label === sourceLang
+=======
+                  {languageOptions.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        setSourceLang(l.label);
+                        setShowSourceDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${
+                        l.label === sourceLang
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                           ? "text-primary font-medium"
                           : "text-foreground"
                       }`}
                     >
+<<<<<<< HEAD
                       {label}
                       <span className="ml-2 text-muted-foreground text-xs">
                         {langCodeMap[label]}
+=======
+                      {l.label}
+                      <span className="ml-2 text-muted-foreground text-xs">
+                        {l.code}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                       </span>
                     </button>
                   ))}
@@ -968,6 +1396,7 @@ const Demo = () => {
               </button>
               {showTargetDropdown && (
                 <div className="absolute top-full mt-1 right-0 z-50 glass-strong rounded-xl py-2 min-w-[160px] max-h-64 overflow-y-auto shadow-card">
+<<<<<<< HEAD
                   {Object.keys(langCodeMap).map((label) => (
                     <button
                       key={label}
@@ -977,13 +1406,30 @@ const Demo = () => {
                       }}
                       className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${
                         label === targetLang
+=======
+                  {languageOptions.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        setTargetLang(l.label);
+                        setShowTargetDropdown(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-muted transition-colors ${
+                        l.label === targetLang
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                           ? "text-primary font-medium"
                           : "text-foreground"
                       }`}
                     >
+<<<<<<< HEAD
                       {label}
                       <span className="ml-2 text-muted-foreground text-xs">
                         {langCodeMap[label]}
+=======
+                      {l.label}
+                      <span className="ml-2 text-muted-foreground text-xs">
+                        {l.code}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                       </span>
                     </button>
                   ))}
@@ -992,6 +1438,10 @@ const Demo = () => {
             </div>
           </div>
 
+<<<<<<< HEAD
+=======
+          {/* Reset button */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
           <button
             onClick={handleReset}
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg glass text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -1000,6 +1450,10 @@ const Demo = () => {
           </button>
         </motion.div>
 
+<<<<<<< HEAD
+=======
+        {/* Error message */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
         <AnimatePresence>
           {errorMsg && (
             <motion.div
@@ -1015,13 +1469,23 @@ const Demo = () => {
           )}
         </AnimatePresence>
 
+<<<<<<< HEAD
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+=======
+        {/* Main panels */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* INPUT PANEL */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
             className="glass rounded-2xl overflow-hidden"
           >
+<<<<<<< HEAD
+=======
+            {/* Input mode tabs */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
             <div className="flex border-b border-border">
               {[
                 { mode: "text" as InputMode, icon: Type, label: "Text" },
@@ -1051,6 +1515,10 @@ const Demo = () => {
               ))}
             </div>
 
+<<<<<<< HEAD
+=======
+            {/* Input content */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
             <div className="p-6 min-h-[300px] flex flex-col">
               <AnimatePresence mode="wait">
                 {inputMode === "text" && (
@@ -1128,7 +1596,10 @@ const Demo = () => {
                         />
                       ))}
                     </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                     <button
                       onClick={status === "listening" ? stopListening : startListening}
                       disabled={status === "translating"}
@@ -1144,13 +1615,19 @@ const Demo = () => {
                         <Mic className="h-6 w-6 text-muted-foreground" />
                       )}
                     </button>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                     <p className="text-sm text-muted-foreground">
                       {status === "listening"
                         ? "Listening — tap to stop"
                         : "Tap the microphone to start"}
                     </p>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                     {transcript && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -1203,16 +1680,24 @@ const Demo = () => {
                             </div>
                           )}
                           <div className="absolute bottom-2 left-2 right-2 px-2 py-1 rounded-md bg-background/70 text-foreground text-xs font-mono text-center backdrop-blur-sm">
+<<<<<<< HEAD
                             {transcript
                               ? `Detected text: "${transcript}"`
                               : detectedGesture
                               ? `Current gesture: "${detectedGesture}"`
+=======
+                            {detectedGesture
+                              ? `Detected: "${detectedGesture}"`
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                               : "Detecting signs..."}
                           </div>
                         </>
                       )}
                     </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                     <button
                       onClick={status === "detecting" ? stopCamera : startCamera}
                       disabled={status === "translating" || status === "processing"}
@@ -1238,7 +1723,10 @@ const Demo = () => {
                         </span>
                       )}
                     </button>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                     {transcript && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -1246,7 +1734,11 @@ const Demo = () => {
                         className="w-full p-4 rounded-xl bg-card text-foreground text-sm"
                       >
                         <span className="text-xs text-muted-foreground block mb-1">
+<<<<<<< HEAD
                           Sign detected as text:
+=======
+                          Detected gesture:
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                         </span>
                         {transcript}
                       </motion.div>
@@ -1257,12 +1749,20 @@ const Demo = () => {
             </div>
           </motion.div>
 
+<<<<<<< HEAD
+=======
+          {/* OUTPUT PANEL */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
             className="glass rounded-2xl overflow-hidden"
           >
+<<<<<<< HEAD
+=======
+            {/* Output mode tabs */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
             <div className="flex border-b border-border">
               {[
                 { mode: "text" as OutputMode, icon: Type, label: "Text" },
@@ -1273,7 +1773,11 @@ const Demo = () => {
                   key={tab.mode}
                   onClick={() => {
                     setOutputMode(tab.mode);
+<<<<<<< HEAD
                     if (tab.mode === "speech" && translatedText && !translatedText.startsWith("ERROR:")) {
+=======
+                    if (tab.mode === "speech" && translatedText) {
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                       speakText(translatedText);
                     }
                     if (tab.mode !== "speech") {
@@ -1293,6 +1797,10 @@ const Demo = () => {
               ))}
             </div>
 
+<<<<<<< HEAD
+=======
+            {/* Output content */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
             <div className="p-6 min-h-[300px] flex flex-col">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-mono text-muted-foreground uppercase tracking-wider">
@@ -1322,9 +1830,13 @@ const Demo = () => {
                       className="flex flex-col items-center gap-3"
                     >
                       <Loader2 className="h-8 w-8 text-primary animate-spin" />
+<<<<<<< HEAD
                       <span className="text-sm text-muted-foreground">
                         Translating...
                       </span>
+=======
+                      <span className="text-sm text-muted-foreground">Translating...</span>
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                     </motion.div>
                   ) : translatedText ? (
                     <motion.div
@@ -1337,13 +1849,18 @@ const Demo = () => {
                       {outputMode === "text" && (
                         <div className="space-y-4">
                           <p
+<<<<<<< HEAD
                             className={`text-2xl lg:text-3xl font-medium leading-relaxed ${
                               translatedText.startsWith("ERROR:") ? "text-destructive" : "text-foreground"
                             }`}
+=======
+                            className="text-2xl lg:text-3xl font-medium text-foreground leading-relaxed"
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                             style={{ textWrap: "balance" } as React.CSSProperties}
                           >
                             {translatedText}
                           </p>
+<<<<<<< HEAD
                           {!translatedText.startsWith("ERROR:") && (
                             <div className="flex items-center gap-2 pt-2">
                               <button
@@ -1421,18 +1938,92 @@ const Demo = () => {
                         </div>
                       )}
 
+=======
+                          <div className="flex items-center gap-2 pt-2">
+                            <button
+                              onClick={() => speakText(translatedText)}
+                              className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                              title="Listen"
+                            >
+                              <Volume2 className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => navigator.clipboard.writeText(translatedText)}
+                              className="px-3 py-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors text-xs font-mono"
+                              title="Copy"
+                            >
+                              Copy
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      {outputMode === "speech" && (
+                        <div className="flex flex-col items-center gap-6">
+                          <p className="text-xl font-medium text-foreground text-center">
+                            {translatedText}
+                          </p>
+                          <div className="flex items-center justify-center gap-[2px] h-12">
+                            {Array.from({ length: 32 }).map((_, i) => (
+                              <motion.div
+                                key={i}
+                                className="w-[2px] rounded-full bg-primary"
+                                animate={
+                                  isSpeaking
+                                    ? {
+                                        height: [4, Math.random() * 32 + 8, 4],
+                                        opacity: [0.3, 1, 0.3],
+                                      }
+                                    : { height: 4, opacity: 0.2 }
+                                }
+                                transition={
+                                  isSpeaking
+                                    ? {
+                                        duration: 0.4 + Math.random() * 0.4,
+                                        repeat: Infinity,
+                                        repeatType: "reverse",
+                                        delay: i * 0.03,
+                                      }
+                                    : { duration: 0.3 }
+                                }
+                              />
+                            ))}
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              onClick={toggleSpeech}
+                              className="px-6 py-3 rounded-xl gradient-primary text-primary-foreground font-medium flex items-center gap-2 shadow-glow hover:opacity-90 transition-opacity"
+                            >
+                              {isSpeaking ? (
+                                <>
+                                  <Pause className="h-5 w-5" /> Pause
+                                </>
+                              ) : (
+                                <>
+                                  <Play className="h-5 w-5" /> Play Audio
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                       {outputMode === "sign" && (
                         <div className="flex flex-col items-center gap-6">
                           <div className="relative">
                             <AnimatePresence mode="wait">
                               <motion.div
+<<<<<<< HEAD
                                 key={`${displayedSignSequence[signAnimIndex]?.key || "fallback"}-${signAnimIndex}`}
+=======
+                                key={signAnimIndex}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                                 initial={{ scale: 0.5, opacity: 0, rotateY: -90 }}
                                 animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                                 exit={{ scale: 0.5, opacity: 0, rotateY: 90 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 className="text-7xl"
                               >
+<<<<<<< HEAD
                                 {displayedSignSequence[signAnimIndex]?.emoji || "🤟"}
                               </motion.div>
                             </AnimatePresence>
@@ -1464,6 +2055,30 @@ const Demo = () => {
                               </p>
                             </>
                           )}
+=======
+                                {signGestureSequence[signAnimIndex].emoji}
+                              </motion.div>
+                            </AnimatePresence>
+                          </div>
+                          <p className="text-lg font-medium text-foreground">{translatedText}</p>
+                          <div className="flex items-center gap-2">
+                            {signGestureSequence.slice(0, 6).map((g, i) => (
+                              <motion.span
+                                key={i}
+                                className={`text-2xl cursor-pointer transition-opacity ${
+                                  i === signAnimIndex % 6 ? "opacity-100" : "opacity-30"
+                                }`}
+                                whileHover={{ scale: 1.2 }}
+                                onClick={() => setSignAnimIndex(i)}
+                              >
+                                {g.emoji}
+                              </motion.span>
+                            ))}
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Sign language gesture sequence
+                          </p>
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
                         </div>
                       )}
                     </motion.div>
@@ -1483,6 +2098,10 @@ const Demo = () => {
           </motion.div>
         </div>
 
+<<<<<<< HEAD
+=======
+        {/* Translate button */}
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

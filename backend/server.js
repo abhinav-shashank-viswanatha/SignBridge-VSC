@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
   res.send("SignBridge backend working 🚀");
 });
 
+<<<<<<< HEAD
 app.post("/translate", async (req, res) => {
   try {
     const { text, source, target } = req.body;
@@ -104,11 +105,111 @@ app.post("/translate", async (req, res) => {
       error: "Translation failed",
       details: error.message,
     });
+=======
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    libretranslateConfigured: true,
+    myMemoryEmailConfigured: false,
+  });
+});
+
+app.post("/translate", async (req, res) => {
+  const { text, source, target } = req.body;
+
+  if (!text || !source || !target) {
+    return res.status(400).json({
+      error: "Missing text, source, or target",
+    });
+  }
+
+  if (source === target) {
+    return res.status(400).json({
+      error: "Please select two different languages",
+    });
+  }
+
+  console.log("Incoming request:", { text, source, target });
+
+  try {
+    const argosResponse = await axios.post(
+      "https://translate.argosopentech.com/translate",
+      {
+        q: text,
+        source,
+        target,
+        format: "text",
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+        timeout: 15000,
+      }
+    );
+
+    if (argosResponse.data?.translatedText) {
+      console.log("Argos success:", argosResponse.data.translatedText);
+      return res.json({
+        translatedText: argosResponse.data.translatedText,
+      });
+    }
+
+    throw new Error("Argos returned no translatedText");
+  } catch (argosError) {
+    console.error(
+      "Argos failed:",
+      argosError.response?.data || argosError.message
+    );
+
+    try {
+      const mmResponse = await axios.get(
+        "https://api.mymemory.translated.net/get",
+        {
+          params: {
+            q: text,
+            langpair: `${source}|${target}`,
+          },
+          timeout: 15000,
+        }
+      );
+
+      const translated =
+        mmResponse.data?.responseData?.translatedText || "";
+
+      if (translated) {
+        console.log("MyMemory success:", translated);
+        return res.json({
+          translatedText: translated,
+        });
+      }
+
+      return res.status(502).json({
+        error: "Both translation providers failed",
+        details: mmResponse.data || "No translated text returned",
+      });
+    } catch (mmError) {
+      console.error(
+        "MyMemory failed:",
+        mmError.response?.data || mmError.message
+      );
+
+      return res.status(500).json({
+        error: "Translation failed",
+        details: {
+          argos: argosError.response?.data || argosError.message,
+          mymemory: mmError.response?.data || mmError.message,
+        },
+      });
+    }
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
   }
 });
 
 app.listen(PORT, () => {
+<<<<<<< HEAD
   console.log(
     `SignBridge backend running on port ${PORT}`
   );
+=======
+  console.log(`Server running on port ${PORT}`);
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 });

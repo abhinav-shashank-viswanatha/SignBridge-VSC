@@ -8,7 +8,11 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 export default defineConfig(({ mode }) => ({
 server: {
 host: true,
+<<<<<<< HEAD
 port: 5000,
+=======
+port: 8080,
+>>>>>>> 727bf14170d488d0ae343329411bb1264258906a
 https: true,
 hmr: {
 overlay: false,

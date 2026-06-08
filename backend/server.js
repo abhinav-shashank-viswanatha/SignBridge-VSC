@@ -13,61 +13,102 @@ app.get("/", (req, res) => {
   res.send("SignBridge backend working 🚀");
 });
 
-app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
-});
-
 app.post("/translate", async (req, res) => {
   try {
-    const { text, target } = req.body;
+    const { text, source, target } = req.body;
 
-    if (!text || !target) {
+    if (!text) {
       return res.status(400).json({
-        error: "Missing text or target"
+        error: "Missing text",
       });
     }
 
-    console.log("Incoming request:", { text, target });
+    console.log(
+      `Translation request: "${text}" (${source} -> ${target})`
+    );
 
-    const response = await axios.post(
-      "https://translate.argosopentech.com/translate",
+    // ==========================
+    // LIBRETRANSLATE ATTEMPT
+    // ==========================
+    try {
+      const libreResponse = await axios.post(
+        "https://translate.terraprint.co/translate",
+        {
+          q: text,
+          source: source || "auto",
+          target,
+          format: "text",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000,
+        }
+      );
+
+      if (
+        libreResponse.data &&
+        libreResponse.data.translatedText
+      ) {
+        console.log("LibreTranslate Success");
+
+        return res.json({
+          translatedText:
+            libreResponse.data.translatedText,
+          provider: "libretranslate",
+        });
+      }
+    } catch (libreError) {
+      console.error(
+        "LibreTranslate failed:",
+        libreError.message
+      );
+    }
+
+    // ==========================
+    // GOOGLE FALLBACK
+    // ==========================
+    const googleResponse = await axios.get(
+      "https://translate.googleapis.com/translate_a/single",
       {
-        q: text,
-        source: "auto",
-        target,
-        format: "text"
-      },
-      {
-        headers: { "Content-Type": "application/json" },
-        timeout: 15000
+        params: {
+          client: "gtx",
+          sl: source || "auto",
+          tl: target,
+          dt: "t",
+          q: text,
+        },
+        timeout: 10000,
       }
     );
 
-    console.log("Provider response:", response.data);
+    const translatedText = googleResponse.data[0]
+      .map((item) => item[0])
+      .join("");
 
-    if (!response.data || !response.data.translatedText) {
-      return res.status(502).json({
-        error: "No translatedText returned from provider",
-        providerResponse: response.data
-      });
-    }
+    console.log(
+      "Google Fallback Success:",
+      translatedText
+    );
 
-    res.json({
-      translatedText: response.data.translatedText
+    return res.json({
+      translatedText,
+      provider: "google",
     });
   } catch (error) {
-    console.error("FULL TRANSLATION ERROR:");
-    console.error("message:", error.message);
-    console.error("provider data:", error.response?.data);
-    console.error("provider status:", error.response?.status);
+    console.error("TRANSLATION ERROR:");
+    console.error(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       error: "Translation failed",
-      details: error.response?.data || error.message
+      details: error.message,
     });
   }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(
+    `SignBridge backend running on port ${PORT}`
+  );
 });
